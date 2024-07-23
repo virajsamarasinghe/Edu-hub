@@ -1,12 +1,12 @@
-import { Button, TextInput, View, StyleSheet,Pressable,Text,KeyboardAvoidingView, ScrollView ,Platform,TouchableOpacity } from 'react-native';
-import React, { useState, useCallback, useEffect } from 'react';
+import { Button, TextInput, View, StyleSheet,Pressable,Text,KeyboardAvoidingView, ScrollView ,Platform,TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useCallback, useEffect ,useRef} from 'react';
 import { Stack } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import {useRouter} from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
-
+import {useAuth} from '../../context/authContext'
 
 interface DropdownItem {
   label: string;
@@ -21,16 +21,16 @@ const data = [
 
 const Signup = () => {
 
-  const router =useRouter();
-  
+  const router = useRouter();
+  const { register } = useAuth();
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
-  
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [emailAddress, setEmailAddress] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const firstName = useRef("");
+  const lastName = useRef("");
+  const emailAddress = useRef("");
+  const password = useRef("");
+  const confirmPassword = useRef("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
@@ -49,27 +49,36 @@ const Signup = () => {
       return;
     }
 
-    // Basic validation (replace with more robust validation)
-    if (!emailAddress || !password || !confirmPassword) {
-      alert('Please fill in all required fields (email, password, confirm password)');
+    if (!firstName.current || !lastName.current || !emailAddress.current || !password.current || !confirmPassword.current) {
+      alert('Please fill in all required fields');
       return;
     }
 
-    if (password !== confirmPassword) {
+    if (password.current !== confirmPassword.current) {
       alert('Passwords do not match');
       return;
     }
 
-    
+    setLoading(true);
 
-    // Handle navigation based on user type
-    if (value === '1') {
-      // Student signup logic (if any)
-      console.log('Student signup');
-      // Navigate or continue signup for student
-    } else if (value === '2') {
-      // Parent signup navigation
-      router.navigate('signupP'); // Navigate to SignupP screen
+    try {
+      const response = await register(firstName.current, lastName.current, emailAddress.current, password.current);
+      setLoading(false);
+      console.log('got result:', response);
+
+      if (!response.success) {
+        Alert.alert('Sign Up', response.msg);
+      } else {
+        if (value === '1') {
+          console.log('Student signup');
+        } else if (value === '2') {
+          router.navigate('signupP');
+        }
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Sign up error:', error);
+      Alert.alert('Sign Up', 'An error occurred during sign up.');
     }
   };
 
@@ -134,40 +143,46 @@ const Signup = () => {
             
           />
           
-          <Text style={{padding:3}}>FirstName</Text>
-            <TextInput
-              autoCapitalize="none"
-              value={firstName}
-              placeholder="First Name"
-              placeholderTextColor="#ACACAA"
-              onChangeText={(firstName) => setFirstName(firstName)}
-              style={styles.inputField}
-            />
-          
-          <Text style={{padding:3}}>LastName</Text>
-            <TextInput
-              autoCapitalize="none"
-              value={lastName}
-              placeholder="Last Name"
-               placeholderTextColor="#ACACAA"
-              onChangeText={(lastName) => setLastName(lastName)}
-              style={styles.inputField}
-            />
-          
-          <Text style={{padding:3}}>Email</Text>
-          <TextInput autoCapitalize="none" placeholder="simon@galaxies.dev"  placeholderTextColor="#ACACAA" value={emailAddress} onChangeText={setEmailAddress} style={styles.inputField} />
-          <Text style={{padding:3}}>Password</Text>
-          <TextInput placeholder="password"  placeholderTextColor="#ACACAA" value={password} onChangeText={setPassword} secureTextEntry style={styles.inputField} />
-          <Text style={{padding:3}}> Confirm Password</Text>
-          <TextInput
-                placeholder="Confirm Password"
+          <Text style={{ padding: 3 }}>First Name</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="First Name"
                 placeholderTextColor="#ACACAA"
-                value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChangeText={value => firstName.current = value}
+                style={styles.inputField}
+              />
+              <Text style={{ padding: 3 }}>Last Name</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="Last Name"
+                placeholderTextColor="#ACACAA"
+                onChangeText={value => lastName.current = value}
+                style={styles.inputField}
+              />
+              <Text style={{ padding: 3 }}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="simon@galaxies.dev"
+                placeholderTextColor="#ACACAA"
+                onChangeText={value => emailAddress.current = value}
+                style={styles.inputField}
+              />
+              <Text style={{ padding: 3 }}>Password</Text>
+              <TextInput
+                placeholder="password"
+                placeholderTextColor="#ACACAA"
+                onChangeText={value => password.current = value}
                 secureTextEntry
                 style={styles.inputField}
               />
-          
+              <Text style={{ padding: 3 }}>Confirm Password</Text>
+              <TextInput
+                placeholder="Confirm Password"
+                placeholderTextColor="#ACACAA"
+                onChangeText={value => confirmPassword.current = value}
+                secureTextEntry
+                style={styles.inputField}
+              />
 
           <Pressable style={styles.button} onPress={handleCreateUser}  >
           <Text style={styles.buttonText}>SignUp</Text>
