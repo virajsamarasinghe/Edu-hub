@@ -9,7 +9,7 @@ import {useRouter} from 'expo-router';
 
 
 
-const Login = () => {
+const Verify = () => {
 
   const router =useRouter();
 
@@ -200,4 +200,4 @@ const styles = StyleSheet.create({
 
 });
 
-export default Login;
+export default Verify;
