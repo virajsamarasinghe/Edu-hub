@@ -74,7 +74,7 @@ const Signup = () => {
         } else if (value === '2') {
           router.navigate('signupP');
         }
-        router.navigate('verify');
+        router.navigate('login');
       }
     } catch (error) {
       setLoading(false);

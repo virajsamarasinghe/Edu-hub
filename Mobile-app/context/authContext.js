@@ -29,30 +29,19 @@ export const AuthContextProvider = ({ children }) => {
             if (!studentDoc.exists()) {
                 throw new Error('Invalid student ID');
             }
-            const email = studentDoc.data().email;
+            const studentData = studentDoc.data();
+            const email = studentData.email;
             console.log('Fetched email for student ID:', email);
-            
-            const response = await signInWithEmailAndPassword(auth, email, password);
-            setUser(response.user);
-            setIsAuthenticated(true);
-            return { success: true, data: response.user };
-        } catch (e) {
-            let msg = e.message;
-            if (msg && typeof msg === 'string') {
-                if (msg.includes('(auth/wrong-password)')) {
-                    msg = 'Incorrect password.';
-                } else if (msg.includes('(auth/user-not-found)')) {
-                    msg = 'No user found with this email.';
-                } else if (msg.includes('Invalid student ID')) {
-                    msg = 'Invalid student ID.';
-                }
-            } else {
-                msg = 'An unknown error occurred.';
-            }
-            return { success: false, msg };
+    
+            // Assuming signInWithEmailAndPassword is imported from Firebase Auth
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            console.log('User logged in:', userCredential.user);
+        } catch (error) {
+            console.error('Login failed:', error.message);
+            throw error; // Rethrow the error to be handled by the caller
         }
     };
-
+    
     const logout = async () => {
         try {
             await signOut(auth);
