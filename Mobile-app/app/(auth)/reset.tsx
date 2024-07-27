@@ -91,7 +91,7 @@ const ResetPassword = () => {
             >
               <Ionicons
                 name={showNewPassword ? 'eye' : 'eye-off'}
-                size={24}
+                size={22}
                 color="#ACACAA"
               />
             </TouchableOpacity>
@@ -112,7 +112,7 @@ const ResetPassword = () => {
             >
               <Ionicons
                 name={showConfirmPassword ? 'eye' : 'eye-off'}
-                size={24}
+                size={22}
                 color="#ACACAA"
               />
             </TouchableOpacity>

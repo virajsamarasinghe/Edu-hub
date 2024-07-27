@@ -1,18 +1,28 @@
-import { Link } from 'expo-router';
-import React, { useState } from 'react';
+import { Link, useRouter, useLocalSearchParams } from 'expo-router';
+import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Button, Pressable, Text, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import LottieView from 'lottie-react-native';
-import { useRouter } from 'expo-router';
 import axios from 'axios';
 
 const Verify = () => {
   const router = useRouter();
+  const { email } = useLocalSearchParams();
   const [code, setCode] = useState('');
- 
+  const [countdown, setCountdown] = useState(60); // 60 seconds countdown
+  const [isResendDisabled, setIsResendDisabled] = useState(true);
+
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setIsResendDisabled(false);
+    }
+  }, [countdown]);
 
   const handleVerification = async () => {
     try {
-      const response = await axios.post('http://192.168.8.142:5001/verify-email', {  code });
+      const response = await axios.post('http://192.168.8.142:5001/verify-email', { code });
       if (response.data.status === 'success') {
         alert('Email verified successfully!');
         router.push('/login'); // Navigate to login page after verification
@@ -22,6 +32,18 @@ const Verify = () => {
     } catch (error) {
       console.error('Verification failed:', error);
       alert('Verification failed. Please try again.');
+    }
+  };
+
+  const handleResendCode = async () => {
+    try {
+      await axios.post('http://192.168.8.142:5001/resend-verification-code', { email });
+      setCountdown(60); // Reset the countdown timer
+      setIsResendDisabled(true);
+      alert('Verification code resent. Please check your email.');
+    } catch (error) {
+      console.error('Resend failed:', error);
+      alert('Resend failed. Please try again.');
     }
   };
 
@@ -49,6 +71,13 @@ const Verify = () => {
           />
           <Pressable style={styles.button} onPress={handleVerification}>
             <Text style={styles.buttonText}>Verify</Text>
+          </Pressable>
+          <Pressable 
+            style={[styles.button, isResendDisabled && styles.buttonDisabled]} 
+            onPress={handleResendCode} 
+            disabled={isResendDisabled}
+          >
+            <Text style={styles.buttonText}>Resend Code ({countdown})</Text>
           </Pressable>
           <Link href="/help" asChild>
             <Pressable>
@@ -110,9 +139,12 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 99,
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 20,
     width: 300,
     height: 46,
+  },
+  buttonDisabled: {
+    backgroundColor: '#a3a3a3',
   },
   buttonText: {
     color: '#fff',
