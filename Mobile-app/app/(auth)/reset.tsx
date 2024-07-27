@@ -73,7 +73,7 @@ const ResetPassword = () => {
             placeholderTextColor="#ACACAA"
             value={oldPassword}
             onChangeText={setOldPassword}
-            secureTextEntry={!showNewPassword}
+            secureTextEntry
           />
            <Text  style={{ padding: 3, marginLeft: -190 }}>New_Password</Text>
            <View style={styles.passwordContainer}>
