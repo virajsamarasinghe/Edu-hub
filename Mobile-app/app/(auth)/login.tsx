@@ -6,6 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
 
 interface DropdownItem {
   label: string;
@@ -22,6 +23,9 @@ const Login = () => {
   const router = useRouter();
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
+  const [studentId, setStudentId] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -31,13 +35,31 @@ const Login = () => {
     }, [])
   );
 
-  const handleCreateUser = async () => {
+  const handleLogin = async () => {
     if (!value) {
       alert('Please select your user type');
       return;
     }
+    if (!studentId || !password) {
+      alert('Please fill in both fields');
+      return;
+    }
 
-    // Basic validation (replace with more robust validation)
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.142:5001/login', {
+        studentId,
+        password
+      });
+      setLoading(false);
+      console.log('Login successful:', response.data);
+      alert('Login successful');
+      // Navigate to the home screen or another screen after successful login
+       router.push('/home');
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to login. Please check your student ID and password.');
+    }
 
     // Handle navigation based on user type
     if (value === '1') {
@@ -104,12 +126,27 @@ const Login = () => {
               />
             )}
           />
-          <Text style={{ padding: 3, marginLeft: -220 }}>Student_ID</Text>
-          <TextInput autoCapitalize="none" placeholder="example@gmail.com" placeholderTextColor="#ACACAA" style={styles.inputField} />
-          <Text style={{ padding: 3, marginLeft: -230 }}>Password</Text>
-          <TextInput placeholder="password" placeholderTextColor="#ACACAA" secureTextEntry style={styles.inputField} />
+          <Text  style={{ padding: 3, marginLeft: -220 }}>Student ID</Text>
+          <TextInput
+            autoCapitalize="none"
+            placeholder="Enter your Student ID"
+            placeholderTextColor="#ACACAA"
+            value={studentId}
+            onChangeText={setStudentId}
+            style={styles.inputField}
+          />
 
-          <Pressable style={styles.button} onPress={handleCreateUser}>
+          <Text  style={{ padding: 3, marginLeft: -220 }}>Password</Text>
+          <TextInput
+            placeholder="Enter your password"
+            placeholderTextColor="#ACACAA"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.inputField}
+          />
+
+          <Pressable style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
           </Pressable>
 

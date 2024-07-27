@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, TextInput, Button, Pressable, Text, Alert,KeyboardAvoidingView, ScrollView ,Platform,TouchableOpacity} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
 
 
@@ -24,7 +24,7 @@ const Login = () => {
   >
       <View style={styles.iconContainer}>
       <TouchableOpacity onPress={()=>router.back()}>
-        <AntDesign name="leftcircleo" size={30} style={styles.icon} color="#fff" />
+       <Ionicons name="arrow-back-outline" size={28} style={styles.icon} color="white" />
       </TouchableOpacity>
       </View>
     
@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+    marginTop:5
   },
   Label: {
     position: 'absolute',
