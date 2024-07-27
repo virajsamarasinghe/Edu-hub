@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const cors = require('cors');
 const nodemailer = require('nodemailer');
 const { body, validationResult } = require('express-validator');
+const crypto = require('crypto');
 
 app.use(express.json());
 app.use(cors());
@@ -107,6 +108,66 @@ app.post('/verify-email', async (req, res) => {
     res.status(500).send({ status: 'error', data: error.message });
   }
 });
+
+app.post("/login", [
+    body('studentId').notEmpty().withMessage('Student ID is required'),
+    body('password').notEmpty().withMessage('Password is required')
+  ], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+  
+    const { studentId, password } = req.body;
+  
+    try {
+      const user = await User.findOne({ studentId, isVerified: true });
+      if (!user) {
+        return res.status(400).send({ status: "error", data: "Invalid student ID or password" });
+      }
+  
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+        return res.status(400).send({ status: "error", data: "Invalid student ID or password" });
+      }
+  
+      res.status(200).send({ status: "success", data: "Login successful" });
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).send({ status: "error", data: error.message });
+    }
+  });
+
+ 
+  
+
+  app.post('/reset-password', async (req, res) => {
+    const { emailAddress, oldPassword, newPassword, confirmPassword } = req.body;
+  
+    if (newPassword !== confirmPassword) {
+      return res.status(400).send({ message: 'New password and confirm password do not match' });
+    }
+  
+    try {
+      const user = await User.findOne({ emailAddress });
+      if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+  
+      const isMatch = await bcrypt.compare(oldPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).send({ message: 'Old password is incorrect' });
+      }
+  
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
+      user.password = hashedPassword;
+      await user.save();
+  
+      res.send({ message: 'Password has been updated successfully' });
+    } catch (error) {
+      res.status(500).send({ message: error.message });
+    }
+  });
 
 app.listen(5001, () => {
   console.log('Node.js server started on port 5001');
