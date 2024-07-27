@@ -1,12 +1,11 @@
 import { useRouter } from 'expo-router';
 import { Link } from 'expo-router';
-import React, { useState, useCallback, useRef } from 'react';
-import { Alert,View, StyleSheet, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import { View, StyleSheet, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useFocusEffect } from '@react-navigation/native';
-import {useAuth} from '../../context/authContext'
 
 interface DropdownItem {
   label: string;
@@ -21,13 +20,8 @@ const data = [
 
 const Login = () => {
   const router = useRouter();
-  const { login } = useAuth();
   const [value, setValue] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState(false);
-
-  const studentID = useRef("");
-  const password = useRef("");
-  const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -37,43 +31,27 @@ const Login = () => {
     }, [])
   );
 
-
-  const handleLogin = async () => {
+  const handleCreateUser = async () => {
     if (!value) {
-        alert('Please select your user type');
-        return;
+      alert('Please select your user type');
+      return;
     }
 
-    if (!studentID.current || !password.current) {
-        alert('Please fill in all required fields');
-        return;
+    // Basic validation (replace with more robust validation)
+
+    // Handle navigation based on user type
+    if (value === '1') {
+      // Student signup logic (if any)
+      console.log('Student login');
+      // Navigate or continue signup for student
+    } else if (value === '2') {
+      // Tutor signup navigation
+      router.navigate('loginT'); // Navigate to loginT screen
+    } else if (value === '3') {
+      // Parent signup navigation
+      router.navigate('loginP'); // Navigate to loginP screen
     }
-
-    setLoading(true);
-
-    try {
-        const response = await login(studentID, password);
-        setLoading(false);
-        console.log('got result:', response);
-
-        if (!response.success) {
-            Alert.alert('Login', response.msg);
-        } else {
-            if (value === '1') {
-                console.log('Student login');
-                // Navigate to student dashboard or home screen
-            } else if (value === '2') {
-                router.navigate('loginT');
-            } else if (value === '3') {
-                router.navigate('loginP');
-            }
-        }
-    } catch (error) {
-        setLoading(false);
-        console.error('Login error:', error);
-        Alert.alert('Login', 'An error occurred during login.');
-    }
-};
+  };
 
   const handleDropdownChange = (item: DropdownItem) => {
     setValue(item.value);
@@ -127,11 +105,11 @@ const Login = () => {
             )}
           />
           <Text style={{ padding: 3, marginLeft: -220 }}>Student_ID</Text>
-          <TextInput onChangeText={Value=>studentID.current=Value}autoCapitalize="none" placeholder="example@gmail.com" placeholderTextColor="#ACACAA" style={styles.inputField} />
+          <TextInput autoCapitalize="none" placeholder="example@gmail.com" placeholderTextColor="#ACACAA" style={styles.inputField} />
           <Text style={{ padding: 3, marginLeft: -230 }}>Password</Text>
-          <TextInput onChangeText={Value=>password.current=Value} placeholder="password" placeholderTextColor="#ACACAA" secureTextEntry style={styles.inputField} />
-          
-          <Pressable style={styles.button} onPress={handleLogin}>
+          <TextInput placeholder="password" placeholderTextColor="#ACACAA" secureTextEntry style={styles.inputField} />
+
+          <Pressable style={styles.button} onPress={handleCreateUser}>
             <Text style={styles.buttonText}>Login</Text>
           </Pressable>
 
