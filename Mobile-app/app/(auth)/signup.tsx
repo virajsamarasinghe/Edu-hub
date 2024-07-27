@@ -4,6 +4,7 @@ import { Stack } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
@@ -37,6 +38,11 @@ const Signup = () => {
     useCallback(() => {
       setValue(null);
       setIsFocus(false);
+      setFirstName('');
+      setLastName('');
+      setEmailAddress('');
+      setPassword('');
+      setConfirmPassword('');
     }, [])
   );
 
@@ -89,9 +95,9 @@ const Signup = () => {
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 100}
     >
       <View style={styles.iconContainer}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <AntDesign name="leftcircleo" size={30} style={styles.icon} color="#fff" />
-        </TouchableOpacity>
+    <TouchableOpacity onPress={()=>router.back()}>
+      <Ionicons name="arrow-back-outline" size={28} style={styles.icon} color="white" />
+    </TouchableOpacity>
       </View>
       <ScrollView style={styles.content} contentContainerStyle={styles.scrollContainer}>
         <View style={styles.welcome}>
@@ -262,6 +268,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+    marginTop:5
   },
   placeholderStyle: {
     fontSize: 16,

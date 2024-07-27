@@ -7,7 +7,9 @@ const userSchema = new mongoose.Schema({
   password: String,
   studentId: String,
   verificationCode: String,
-  isVerified: { type: Boolean, default: false }
+  isVerified: { type: Boolean, default: false },
+//   resetToken: String,
+//   resetTokenExpiry: Date,
 });
 
 module.exports = mongoose.model('Students', userSchema);
