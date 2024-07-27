@@ -46,6 +46,23 @@ const sendVerificationCode = (email, code) => {
   });
 };
 
+const sendStudentIdEmail = (email, studentId) => {
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: 'Your Student ID',
+      text: `Your student ID is: ${studentId}`
+    };
+  
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+      } else {
+        console.log('Email sent:', info.response);
+      }
+    });
+  };
+
 app.post("/register", [
   body('emailAddress').isEmail().withMessage('Invalid email format'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
@@ -101,6 +118,9 @@ app.post('/verify-email', async (req, res) => {
     user.verificationCode = undefined;
     user.verificationCodeExpiry = undefined;
     await user.save();
+
+    // Send student ID via email
+    sendStudentIdEmail(user.emailAddress, user.studentId);
 
     res.status(200).send({ status: 'success', data: 'Email verified successfully.' });
   } catch (error) {
