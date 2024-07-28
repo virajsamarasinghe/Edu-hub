@@ -2,10 +2,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import quiz from '../../assets/icon/quiz.png'; 
-import resources from '../../assets/icon/resourcess.png';
-import progress from '../../assets/icon/progress.png';
-import chat from '../../assets/icon/chat.png';
+
+
+
 
 export default function Home() {
     return (
@@ -23,23 +22,23 @@ export default function Home() {
 
             </TouchableOpacity>
             <TouchableOpacity style={styles.box1}>
-                <Image source={quiz} style={styles.quizImage} />
+                <Image source={require('./../../assets/icon/quiz.png')} style={styles.quizImage} />
                 <Text style={styles.quizText}>Quiz</Text>
                 <Text style={styles.quiznoteText}>Upcoming Quizes</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.box2} >
-            <Image source={resources} style={styles.resourcesImage} />
+            <Image source={require('./../../assets/icon/resourcess.png')} style={styles.resourcesImage} />
                 <Text style={styles.resourcesText}>Resources</Text>
                 <Text style={styles.resourcenoteText}>You can download all the resources from here!</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.box3} >
-            <Image source={progress} style={styles.progressImage} />
+            <Image source={require('./../../assets/icon/progress.png')} style={styles.progressImage} />
                 <Text style={styles.progressText}>Progress</Text>
                 <Text style={styles.progressnoteText}>Your progress according{'\n'} to your marks</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.box4} >
-            <Image source={chat} style={styles.chatImage} />
+            <Image source={require('./../../assets/icon/chat.png')} style={styles.chatImage} />
                 <Text style={styles.chatText}>Tutor’s
                 Advices</Text>
                 <Text style={styles.chatnoteText}>Ask questions</Text>
