@@ -32,6 +32,8 @@ const Signup = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useFocusEffect(
@@ -74,7 +76,10 @@ const Signup = () => {
       console.log('Registration successful:', response.data);
       alert('Registration successful! Please check your email for verification.');
       setPendingVerification(true);
-      router.push('/verify');
+      router.push({
+        pathname: '/verify',
+        params: { email: emailAddress }
+      })
     } catch (error) {
       setLoading(false);
       alert('Failed to register. Please try again.');
@@ -169,18 +174,38 @@ const Signup = () => {
                 placeholderTextColor="#ACACAA"
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry
+                secureTextEntry={!showPassword}
                 style={styles.inputField}
               />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon1}
+            >
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
               <Text style={styles.label}>Confirm Password</Text>
               <TextInput
                 placeholder="Confirm Password"
                 placeholderTextColor="#ACACAA"
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                secureTextEntry
+                secureTextEntry={!showConfirmPassword}
                 style={styles.inputField}
               />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={styles.eyeIcon2}
+            >
+              <Ionicons
+                name={showConfirmPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
 
               <Pressable style={styles.button} onPress={handleCreateUser}>
                 <Text style={styles.buttonText}>SignUp</Text>
@@ -287,6 +312,16 @@ const styles = StyleSheet.create({
   },
   label: {
     padding: 3
+  },
+  eyeIcon1: {
+    position: 'absolute',
+    right: 8,
+    top:350
+  },
+  eyeIcon2: {
+    position: 'absolute',
+    right: 8,
+    top:430
   },
 });
 

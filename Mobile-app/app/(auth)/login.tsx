@@ -1,12 +1,14 @@
 import { useRouter } from 'expo-router';
 import { Link } from 'expo-router';
 import React, { useState, useCallback } from 'react';
-import { View, StyleSheet, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { View, StyleSheet,TouchableOpacity, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useFocusEffect } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface DropdownItem {
   label: string;
@@ -25,6 +27,7 @@ const Login = () => {
   const [isFocus, setIsFocus] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useFocusEffect(
@@ -32,6 +35,9 @@ const Login = () => {
       // Reset state when screen is focused
       setValue(null);
       setIsFocus(false);
+      setStudentId('');
+      setPassword('')
+
     }, [])
   );
 
@@ -53,6 +59,9 @@ const Login = () => {
       });
       setLoading(false);
       console.log('Login successful:', response.data);
+
+      await AsyncStorage.setItem('isLoggedIN', 'true');
+
       alert('Login successful');
       // Navigate to the home screen or another screen after successful login
        router.push('/home');
@@ -142,9 +151,20 @@ const Login = () => {
             placeholderTextColor="#ACACAA"
             value={password}
             onChangeText={setPassword}
-            secureTextEntry
+            secureTextEntry={!showPassword}
             style={styles.inputField}
           />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
+          
 
           <Pressable style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
@@ -278,6 +298,12 @@ const styles = StyleSheet.create({
   iconStyle: {
     width: 20,
     height: 20,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 60,
+    top:295
+    
   },
 });
 

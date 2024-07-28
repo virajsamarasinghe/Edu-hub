@@ -129,6 +129,29 @@ app.post('/verify-email', async (req, res) => {
   }
 });
 
+app.post('/resend-verification-code', async (req, res) => {
+    const { email } = req.body;
+  
+    try {
+      const user = await User.findOne({ emailAddress: email });
+      if (!user) {
+        return res.status(404).send({ status: 'error', data: 'User not found' });
+      }
+  
+      const newVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+      user.verificationCode = newVerificationCode;
+      user.verificationCodeExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+      await user.save();
+  
+      sendVerificationCode(email, newVerificationCode);
+  
+      res.status(200).send({ status: 'success', data: 'Verification code resent successfully.' });
+    } catch (error) {
+      console.error('Error during resending verification code:', error);
+      res.status(500).send({ status: 'error', data: error.message });
+    }
+  });
+
 app.post("/login", [
     body('studentId').notEmpty().withMessage('Student ID is required'),
     body('password').notEmpty().withMessage('Password is required')

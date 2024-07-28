@@ -73,7 +73,7 @@ const ResetPassword = () => {
             placeholderTextColor="#ACACAA"
             value={oldPassword}
             onChangeText={setOldPassword}
-            secureTextEntry={!showNewPassword}
+            secureTextEntry
           />
            <Text  style={{ padding: 3, marginLeft: -190 }}>New_Password</Text>
            <View style={styles.passwordContainer}>
@@ -91,7 +91,7 @@ const ResetPassword = () => {
             >
               <Ionicons
                 name={showNewPassword ? 'eye' : 'eye-off'}
-                size={24}
+                size={22}
                 color="#ACACAA"
               />
             </TouchableOpacity>
@@ -112,7 +112,7 @@ const ResetPassword = () => {
             >
               <Ionicons
                 name={showConfirmPassword ? 'eye' : 'eye-off'}
-                size={24}
+                size={22}
                 color="#ACACAA"
               />
             </TouchableOpacity>
