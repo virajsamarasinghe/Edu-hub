@@ -30,6 +30,9 @@ export default function StartPage() {
     getData();
   }, []);
 
+
+
+
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', backgroundColor: '#8C78F0' }}>
@@ -37,6 +40,7 @@ export default function StartPage() {
       </View>
     );
   }
+
 
   return null;
 }

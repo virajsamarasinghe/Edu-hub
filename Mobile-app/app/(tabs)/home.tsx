@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
@@ -10,35 +10,40 @@ import chat from '../../assets/icon/chat.png';
 export default function Home() {
     return (
         <LinearGradient
-            colors={['#8C78F0', 'rgba(140, 120, 240, 0)']}
+            colors={['#8C78F0', 'rgba(140, 120, 140, 0)']}
             locations={[0.37, 0.91]}
             style={styles.container}
         >
-            <View style={styles.iconContainer}>
+            <TouchableOpacity style={styles.iconContainerm}>
                 <Ionicons name="notifications-outline" size={30} color="#ffffff" style={styles.icon} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconContainerb}>
                 <Ionicons name="chatbubble-outline" size={30} color="#ffffff" style={styles.icon} />
-            </View>
-            <View style={styles.box1}>
+
+
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.box1}>
                 <Image source={quiz} style={styles.quizImage} />
                 <Text style={styles.quizText}>Quiz</Text>
                 <Text style={styles.quiznoteText}>Upcoming Quizes</Text>
-            </View>
-            <View style={styles.box2} >
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.box2} >
             <Image source={resources} style={styles.resourcesImage} />
                 <Text style={styles.resourcesText}>Resources</Text>
                 <Text style={styles.resourcenoteText}>You can download all the resources from here!</Text>
-            </View>
-            <View style={styles.box3} >
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.box3} >
             <Image source={progress} style={styles.progressImage} />
                 <Text style={styles.progressText}>Progress</Text>
                 <Text style={styles.progressnoteText}>Your progress according{'\n'} to your marks</Text>
-            </View>
-            <View style={styles.box4} >
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.box4} >
             <Image source={chat} style={styles.chatImage} />
                 <Text style={styles.chatText}>Tutor’s
                 Advices</Text>
                 <Text style={styles.chatnoteText}>Ask questions</Text>
-            </View>
+            </TouchableOpacity>
             <Text style={styles.hellovirajText}>Hello Viraj,</Text>
             <Text style={styles.yourLearningtimeText}>Your Learning Time</Text>
             <Text style={styles.welcomeText}>Welcome to</Text>
@@ -53,42 +58,52 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    iconContainer: {
+    iconContainerb: {
         flexDirection: 'row',
         position: 'absolute',
         top: 50,
         right: 20,
     },
+    iconContainerm: {
+        flexDirection: 'row',
+        position: 'absolute',
+        top: 50,
+        right: 65,
+    },
     icon: {
-        marginLeft: 15,
+        marginLeft: 10,
     },
     box1: {
         position: 'absolute',
         width: 190,
         height: 200,
         backgroundColor: '#ffffff',
-        top: 360,
+        top: 365,
         left: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.5,
         shadowRadius: 3.84,
         elevation: 5,
         borderRadius: 30,
+        borderColor: '#8C78F0',
+        borderWidth: 2,
     },
     box2: {
         position: 'absolute',
         width: 190,
         height: 200,
         backgroundColor: '#ffffff',
-        top: 360,
+        top: 365,
         right: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.5,
         shadowRadius: 3.84,
         elevation: 5,
         borderRadius: 30,
+        borderColor: '#8C78F0',
+        borderWidth: 2,
     },
     box3: {
         position: 'absolute',
@@ -99,10 +114,12 @@ const styles = StyleSheet.create({
         left: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.5,
         shadowRadius: 3.84,
         elevation: 5,
         borderRadius: 30,
+        borderColor: '#8C78F0',
+        borderWidth: 2,
     },
     box4: {
         position: 'absolute',
@@ -113,10 +130,12 @@ const styles = StyleSheet.create({
         right: 10,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.5,
         shadowRadius: 3.84,
         elevation: 5,
         borderRadius: 30,
+        borderColor: '#8C78F0',
+        borderWidth: 2,
     },
     welcomeText: {
         color: '#ffffff',
