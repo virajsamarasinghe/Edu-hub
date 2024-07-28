@@ -8,6 +8,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface DropdownItem {
   label: string;
@@ -58,6 +59,9 @@ const Login = () => {
       });
       setLoading(false);
       console.log('Login successful:', response.data);
+
+      await AsyncStorage.setItem('isLoggedIN', 'true');
+
       alert('Login successful');
       // Navigate to the home screen or another screen after successful login
        router.push('/home');
