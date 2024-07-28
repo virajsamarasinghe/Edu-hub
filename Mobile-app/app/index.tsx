@@ -4,6 +4,6 @@ import { Redirect } from "expo-router";
 export default function Index() {
 
 
-  return <Redirect href={'/start'}/>
+  return <Redirect href={'/profile'}/>
 
 }    
