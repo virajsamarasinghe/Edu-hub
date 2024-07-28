@@ -24,7 +24,7 @@ const Verify = () => {
     try {
 
     
-=======
+
       const response = await axios.post('http://192.168.8.142:5001/verify-email', { code });
 
       if (response.data.status === 'success') {
