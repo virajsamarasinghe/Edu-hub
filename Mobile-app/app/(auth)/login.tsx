@@ -62,7 +62,7 @@ const Login = () => {
 
       await AsyncStorage.setItem('isLoggedIN', 'true');
 
-      alert('Login successful');
+      //alert('Login successful');
       // Navigate to the home screen or another screen after successful login
        router.push('/home');
     } catch (error) {

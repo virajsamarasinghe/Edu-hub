@@ -2,7 +2,7 @@ import { Button, TextInput, View, StyleSheet,Pressable,Text,KeyboardAvoidingView
 import { useState } from 'react';
 import { Stack } from 'expo-router';
 import LottieView from 'lottie-react-native';
-
+import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
 
@@ -15,21 +15,20 @@ const Signup = () => {
   const [value, setValue] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
   
-  const [studentID, setStudentID] = useState("");
+  const [studentId, setStudentID] = useState("");
   const [username, setUserName] = useState("");
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
 
   const handleCreateUser = async () => {
-    if (!value) {
-      alert('Please select your user type (Student or Parent)');
-      return;
-    }
+ 
 
     // Basic validation (replace with more robust validation)
     if (!emailAddress || !password || !confirmPassword) {
@@ -40,6 +39,27 @@ const Signup = () => {
     if (password !== confirmPassword) {
       alert('Passwords do not match');
       return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.142:5001/registerP', {
+        studentId,
+        username,
+        emailAddress,
+        password
+      });
+      setLoading(false);
+      console.log('Registration successful:', response.data);
+      alert('Registration successful! Please check your email for verification.');
+      setPendingVerification(true);
+      router.push({
+        pathname: '/verifyP',
+        params: { email: emailAddress }
+      })
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to register. Please try again.');
     }
 }
 
@@ -68,17 +88,17 @@ const Signup = () => {
       <Stack.Screen options={{ headerBackVisible: !pendingVerification }} />
       
 
-      {!pendingVerification && (
+    
         <View>
 
           
           <Text style={{padding:3}}>Student ID</Text>
             <TextInput
               autoCapitalize="none"
-              value={studentID}
+              value={studentId}
               placeholder="student ID"
               placeholderTextColor="#ACACAA"
-              onChangeText={(firstName) => setStudentID(firstName)}
+              onChangeText={setStudentID}
               style={styles.inputField}
             />
           
@@ -87,40 +107,67 @@ const Signup = () => {
               autoCapitalize="none"
               value={username}
               placeholder="username"
-               placeholderTextColor="#ACACAA"
-              onChangeText={(lastName) => setUserName(lastName)}
+              placeholderTextColor="#ACACAA"
+              onChangeText={setUserName}
               style={styles.inputField}
             />
           
-          <Text style={{padding:3}}>Email</Text>
-          <TextInput autoCapitalize="none" placeholder="simon@galaxies.dev"  placeholderTextColor="#ACACAA" value={emailAddress} onChangeText={setEmailAddress} style={styles.inputField} />
-          <Text style={{padding:3}}>Password</Text>
-          <TextInput placeholder="password"  placeholderTextColor="#ACACAA" value={password} onChangeText={setPassword} secureTextEntry style={styles.inputField} />
-          <Text style={{padding:3}}> Confirm Password</Text>
-          <TextInput
+          <Text style={styles.label}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="simon@galaxies.dev"
+                placeholderTextColor="#ACACAA"
+                value={emailAddress}
+                onChangeText={setEmailAddress}
+                style={styles.inputField}
+              />
+            <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#ACACAA"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                style={styles.inputField}
+              />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon1}
+            >
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
+              <Text style={styles.label}>Confirm Password</Text>
+              <TextInput
                 placeholder="Confirm Password"
                 placeholderTextColor="#ACACAA"
                 value={confirmPassword}
                 onChangeText={setConfirmPassword}
-                secureTextEntry
+                secureTextEntry={!showConfirmPassword}
                 style={styles.inputField}
               />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={styles.eyeIcon2}
+            >
+              <Ionicons
+                name={showConfirmPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
           
 
-          <Pressable style={styles.button} >
+          <Pressable style={styles.button} onPress={handleCreateUser} >
           <Text style={styles.buttonText}>SignUp</Text>
          </Pressable>
         </View>
-      )}
+      
 
-      {pendingVerification && (
-        <View>
-          <View>
-            <TextInput value={code} placeholder="Code..." style={styles.inputField} onChangeText={setCode} />
-          </View>
-          <Button  title="Verify Email" color={'#6c47ff'}></Button>
-        </View>
-      )}
+
     </View>
     </ScrollView>
     </KeyboardAvoidingView>
@@ -221,6 +268,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     fontSize: 14,
   },
+  label: {
+    padding: 3
+  },
   placeholderStyle: {
     fontSize: 16,
   },
@@ -239,6 +289,16 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 45 : 15, // Adjust as per your design
     paddingHorizontal: 15,
     backgroundColor: 'rgba(0, 0, 0, 0)', // Same background as content
+  },
+  eyeIcon1: {
+    position: 'absolute',
+    right: 8,
+    top:285
+  },
+  eyeIcon2: {
+    position: 'absolute',
+    right: 8,
+    top:365
   },
 });
 

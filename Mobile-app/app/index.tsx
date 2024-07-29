@@ -26,8 +26,27 @@ export default function StartPage() {
     }
   };
 
+  const getDataP = async () => {
+    try {
+      const data = await AsyncStorage.getItem('isLoggedINP');
+      console.log(data, 'at StartPage');
+      if (data === 'true') {
+        setIsLoggedIn(true);
+        router.push('/homeP');
+      } else {
+        setIsLoggedIn(false);
+        router.push('/loginP');
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     getData();
+    getDataP();
   }, []);
 
 

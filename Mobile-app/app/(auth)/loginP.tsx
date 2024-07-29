@@ -6,13 +6,43 @@ import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const Login = () => {
 
     const router =useRouter();
+    const [emailAddress, setEmailAddress] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [loading, setLoading] = useState(false);
 
+    const handleLogin = async () => {
+    if (!emailAddress || !password) {
+      alert('Please fill in both fields');
+      return;
+    }
 
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.142:5001/loginP', {
+        emailAddress,
+        password
+      });
+      setLoading(false);
+      console.log('Login successful:', response.data);
+
+      await AsyncStorage.setItem('isLoggedINP', 'true');
+
+      //alert('Login successful');
+      // Navigate to the home screen or another screen after successful login
+       router.push('/homeP');
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to login. Please check your student ID and password.');
+    }
+  }
   
 
   return (
@@ -39,13 +69,37 @@ const Login = () => {
      
     
       <Text style={{padding:3,marginLeft:-260}}>Email</Text>
-      <TextInput  autoCapitalize="none" placeholder="example@gmail.com" placeholderTextColor="#ACACAA" style={styles.inputField} />
+      <TextInput
+            autoCapitalize="none"
+            placeholder="Email Address"
+            placeholderTextColor="#ACACAA"
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+            style={styles.inputField}
+          />
       <Text  style={{padding:3,marginLeft:-230}}>Password</Text>
-      <TextInput placeholder="password" placeholderTextColor="#ACACAA" secureTextEntry style={styles.inputField} />
+      <TextInput
+            placeholder="Enter your password"
+            placeholderTextColor="#ACACAA"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            style={styles.inputField}
+          />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
       
 
 
-      <Pressable style={styles.button}>
+      <Pressable style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
 
@@ -199,6 +253,12 @@ const styles = StyleSheet.create({
     paddingTop: Platform.OS === 'ios' ? 45 : 15, // Adjust as per your design
     paddingHorizontal: 15,
     backgroundColor: '#8C78F0', // Same background as content
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 60,
+    top:260
+    
   },
 
 });
