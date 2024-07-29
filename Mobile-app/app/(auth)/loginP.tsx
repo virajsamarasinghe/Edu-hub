@@ -52,7 +52,7 @@ const Login = () => {
     keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 100}
   >
       <View style={styles.iconContainer}>
-      <TouchableOpacity onPress={()=>router.back()}>
+      <TouchableOpacity onPress={() => router.replace('/login')}>
       <Ionicons name="arrow-back-outline" size={28} style={styles.icon} color="white" />
       </TouchableOpacity>
       </View>
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     zIndex: 999,
     paddingTop: Platform.OS === 'ios' ? 45 : 15, // Adjust as per your design
     paddingHorizontal: 15,
-    backgroundColor: '#8C78F0', // Same background as content
+    backgroundColor: 'rgba(0, 0, 0, 0)', // Same background as content
   },
   eyeIcon: {
     position: 'absolute',
