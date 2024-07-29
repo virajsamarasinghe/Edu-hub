@@ -29,7 +29,7 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />
                 }}
             />
-            {/* <Tabs.Screen name='schedule'
+            <Tabs.Screen name='schedule'
                 options={{
                     tabBarLabel: 'Schedule',
                     tabBarIcon: ({ color }) => <FontAwesome name="calendar-times-o" size={26} color={color} />
@@ -46,7 +46,7 @@ export default function TabLayout() {
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-outline" size={26} color={color} />,
                 }}
-            /> */}
+            />
         </Tabs>
     );
 }
