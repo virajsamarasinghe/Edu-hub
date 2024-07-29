@@ -3,12 +3,24 @@ import { Button, TextInput, View, StyleSheet, Image, Pressable, Text, KeyboardAv
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import profile from '../../assets/images/profile.png';
+import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function Home() {
     const [name1, setName] = useState('');
     const [email, setEmail] = useState('');
     const [phone, setPhone] = useState('');
     const [password, setPassword] = useState('');
+    const router = useRouter();
+
+    const logout = async () => {
+        try {
+            await AsyncStorage.removeItem('isLoggedIN');
+            router.push('/login');
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
+    };
 
     return (
         <LinearGradient
@@ -27,7 +39,7 @@ export default function Home() {
                 
             
             <View style={styles.box1}>
-                <Image source={profile} style={styles.profileImage} />
+                <Image source={require('./../../assets/images/profile.png')} style={styles.profileImage} />
             </View>
             <Text style={styles.hellovirajText}>Hello Viraj,</Text>
             <Text style={styles.idText}>ID EG/2021/4776</Text>
@@ -78,7 +90,7 @@ export default function Home() {
                 secureTextEntry
             />
 
-            <Pressable style={styles.button} >
+            <Pressable style={styles.button} onPress={logout} >
             <Text style={styles.buttonText}>Log out</Text>
             </Pressable>
             <View style={styles.box4}>

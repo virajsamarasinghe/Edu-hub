@@ -18,7 +18,7 @@ mongoose
   .then(() => console.log('MongoDB Connected...'))
   .catch((e) => console.error('Connection error', e));
 
-require('./StudentDetails');
+require('./models/StudentDetails');
 const User = mongoose.model('Students');
 
 const transporter = nodemailer.createTransport({
