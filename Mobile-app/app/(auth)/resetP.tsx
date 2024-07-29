@@ -26,7 +26,7 @@ const ResetPassword = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/reset-password', {
+      const response = await axios.post('http://192.168.8.142:5001/reset-passwordP', {
         emailAddress,
         oldPassword,
         newPassword,
@@ -34,7 +34,7 @@ const ResetPassword = () => {
       });
       setLoading(false);
       Alert.alert('Success', response.data.message);
-      router.push('/login');
+      router.push('/loginP');
     } catch (error) {
       setLoading(false);
       Alert.alert('Error', 'Failed to reset password. Please try again.');
