@@ -15,7 +15,7 @@ export default function Home() {
 
     const logout = async () => {
         try {
-            await AsyncStorage.removeItem('isLoggedIN');
+            await AsyncStorage.removeItem('isLoggedINP');
             router.push('/login');
         } catch (error) {
             console.error('Error logging out:', error);
