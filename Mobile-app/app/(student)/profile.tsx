@@ -5,6 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function Home() {
     const [name1, setName] = useState('');
@@ -48,47 +49,67 @@ export default function Home() {
             
 
             <Text style={styles.label}>Name</Text>
-            <TextInput
-                autoCapitalize="none"
-                value={name1}
-                placeholder="Name"
-                placeholderTextColor="#ACACAA"
-                onChangeText={setName}
-                style={styles.inputField}
-            />
-
+            
+            <View style={styles.inputContainer}>
+    <TextInput
+        autoCapitalize="none"
+        value={name1}
+        placeholder="Name"
+        placeholderTextColor="#ACACAA"
+        onChangeText={setName}
+        style={styles.inputField}
+    />
+    <TouchableOpacity>
+        <FontAwesome name="edit" size={24} color="black" />
+    </TouchableOpacity>
+</View>
             <Text style={styles.label}>Email</Text>
-            <TextInput
-                autoCapitalize="none"
-                value={email}
-                placeholder="Email"
-                placeholderTextColor="#ACACAA"
-                onChangeText={setEmail}
-                style={styles.inputField}
-                keyboardType="email-address"
-            />
+            <View style={styles.inputContainer}>
+                <TextInput
+                    autoCapitalize="none"
+                    value={email}
+                    placeholder="Email"
+                    placeholderTextColor="#ACACAA"
+                    onChangeText={setEmail}
+                    style={styles.inputField}
+                    keyboardType="email-address"
+                />
+                <TouchableOpacity>
+                    <FontAwesome name="edit" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
 
             <Text style={styles.label}>Phone</Text>
-            <TextInput
-                autoCapitalize="none"
-                value={phone}
-                placeholder="Phone"
-                placeholderTextColor="#ACACAA"
-                onChangeText={setPhone}
-                style={styles.inputField}
-                keyboardType="phone-pad"
-            />
+            <View style={styles.inputContainer}>
+                <TextInput
+                    autoCapitalize="none"
+                    value={phone}
+                    placeholder="Phone"
+                    placeholderTextColor="#ACACAA"
+                    onChangeText={setPhone}
+                    style={styles.inputField}
+                    keyboardType="phone-pad"
+                />
+                <TouchableOpacity>
+                    <FontAwesome name="edit" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
 
             <Text style={styles.label}>Password</Text>
-            <TextInput
-                autoCapitalize="none"
-                value={password}
-                placeholder="Password"
-                placeholderTextColor="#ACACAA"
-                onChangeText={setPassword}
-                style={styles.inputField}
-                secureTextEntry
-            />
+            <View style={styles.inputContainer}>
+                <TextInput
+                    autoCapitalize="none"
+                    value={password}
+                    placeholder="Password"
+                    placeholderTextColor="#ACACAA"
+                    onChangeText={setPassword}
+                    style={styles.inputField}
+                    secureTextEntry
+                />
+                <TouchableOpacity>
+                    <FontAwesome name="edit" size={24} color="black" />
+                </TouchableOpacity>
+            </View>
 
             <Pressable style={styles.button} onPress={logout} >
             <Text style={styles.buttonText}>Log out</Text>
@@ -149,6 +170,14 @@ const styles = StyleSheet.create({
         left: 15,
         
     },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        
+        
+       
+    },
+    
     doText:{
         color: '#000',
         left: 15,
