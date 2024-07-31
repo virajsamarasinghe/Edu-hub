@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Button, TextInput, View, StyleSheet, Image, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -6,13 +6,36 @@ import { Feather } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
+import axios from 'axios';
+
+
+
 
 export default function Home() {
-    const [name1, setName] = useState('');
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
-    const [phone, setPhone] = useState('');
+    const [phone, setPhone] = useState('123-456-7890');
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [isEditingEmail, setIsEditingEmail] = useState(false);
+    const [isEditingPhone, setIsEditingPhone] = useState(false);
+    const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [password, setPassword] = useState('');
     const router = useRouter();
+    useEffect(() => {
+        const fetchUserProfile = async () => {
+            try {
+                const response = await axios.get('/api/user/profile');
+                const { name, email, phone } = response.data;
+                setName(name);
+                setEmail(email);
+                setPhone(phone);
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+            }
+        };
+
+        fetchUserProfile();
+    }, []);
 
     const logout = async () => {
         try {
@@ -22,6 +45,10 @@ export default function Home() {
             console.error('Error logging out:', error);
         }
     };
+    const toggleEditName = () => setIsEditingName(!isEditingName);
+    const toggleEditEmail = () => setIsEditingEmail(!isEditingEmail);
+    const toggleEditPhone = () => setIsEditingPhone(!isEditingPhone);
+    const toggleEditPassword = () => setIsEditingPassword(!isEditingPassword);
 
     return (
         <LinearGradient
@@ -39,9 +66,9 @@ export default function Home() {
             <View style={styles.box}/>
                 
             
-            <View style={styles.box1}>
+            <TouchableOpacity style={styles.box1}>
                 <Image source={require('./../../assets/images/profile.png')} style={styles.profileImage} />
-            </View>
+            </TouchableOpacity>
             <Text style={styles.hellovirajText}>Hello Viraj,</Text>
             <Text style={styles.idText}>ID EG/2021/4776</Text>
             <Text style={styles.profileText}>Profile</Text>
@@ -51,20 +78,25 @@ export default function Home() {
             <Text style={styles.label}>Name</Text>
             
             <View style={styles.inputContainer}>
+            {isEditingName ? (       
     <TextInput
         autoCapitalize="none"
-        value={name1}
+        value={name}
         placeholder="Name"
         placeholderTextColor="#ACACAA"
         onChangeText={setName}
         style={styles.inputField}
     />
-    <TouchableOpacity>
+) : (
+    <Text style={styles.inputField}>{name}</Text>
+)}
+    <TouchableOpacity onPress={toggleEditName} style={styles.editIcon}>
         <FontAwesome name="edit" size={24} color="black" />
     </TouchableOpacity>
 </View>
             <Text style={styles.label}>Email</Text>
             <View style={styles.inputContainer}>
+            {isEditingEmail ? (
                 <TextInput
                     autoCapitalize="none"
                     value={email}
@@ -74,13 +106,17 @@ export default function Home() {
                     style={styles.inputField}
                     keyboardType="email-address"
                 />
-                <TouchableOpacity>
+            ) : (
+                <Text style={styles.inputField}>{email}</Text>
+            )}
+                <TouchableOpacity onPress={toggleEditEmail} style={styles.editIcon}>
                     <FontAwesome name="edit" size={24} color="black" />
                 </TouchableOpacity>
             </View>
 
             <Text style={styles.label}>Phone</Text>
             <View style={styles.inputContainer}>
+            {isEditingPhone ? (
                 <TextInput
                     autoCapitalize="none"
                     value={phone}
@@ -90,25 +126,32 @@ export default function Home() {
                     style={styles.inputField}
                     keyboardType="phone-pad"
                 />
-                <TouchableOpacity>
+            ) : (
+                <Text style={styles.inputField}>{email}</Text>
+            )}
+                <TouchableOpacity onPress={toggleEditPhone} style={styles.editIcon}>
                     <FontAwesome name="edit" size={24} color="black" />
                 </TouchableOpacity>
             </View>
 
             <Text style={styles.label}>Password</Text>
             <View style={styles.inputContainer}>
-                <TextInput
-                    autoCapitalize="none"
-                    value={password}
-                    placeholder="Password"
-                    placeholderTextColor="#ACACAA"
-                    onChangeText={setPassword}
-                    style={styles.inputField}
-                    secureTextEntry
-                />
-                <TouchableOpacity>
-                    <FontAwesome name="edit" size={24} color="black" />
-                </TouchableOpacity>
+            {isEditingPassword ? (
+                        <TextInput
+                            autoCapitalize="none"
+                            value={password}
+                            placeholder="Password"
+                            placeholderTextColor="#ACACAA"
+                            onChangeText={setPassword}
+                            style={styles.inputField}
+                            secureTextEntry
+                        />
+                    ) : (
+                        <Text style={styles.inputField}>{'*'.repeat(password.length)}</Text>
+                    )}
+                    <TouchableOpacity onPress={toggleEditPassword} style={styles.editIcon}>
+                        <FontAwesome name="edit" size={24} color="black" />
+                    </TouchableOpacity>
             </View>
 
             <Pressable style={styles.button} onPress={logout} >
@@ -206,6 +249,10 @@ const styles = StyleSheet.create({
     box2:{
         top: 30,
 
+    },
+    editIcon: {
+        marginLeft: -30,
+        top: -4,
     },
     box: {
         position: 'absolute',
