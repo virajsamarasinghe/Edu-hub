@@ -184,6 +184,19 @@ app.post("/login", [
     }
   });
 
+  app.get('/test/parent/:id', async (req, res) => {
+    try {
+      const parent = await Parent.findById(req.params.id).select('-password');
+      if (!parent) {
+        return res.status(404).json({ message: 'Parent not found' });
+      }
+      res.json(parent);
+    } catch (error) {
+      console.error('Error fetching parent profile:', error);
+      res.status(500).json({ message: 'Server error' });
+    }
+  });
+
  
   
 
