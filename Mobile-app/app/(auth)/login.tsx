@@ -285,8 +285,8 @@ const styles = StyleSheet.create({
   Label: {
     position: 'absolute',
     backgroundColor: 'white',
-    left: 22,
-    top: 8,
+    left: wp('6%'),
+    top: hp('2%'),
     zIndex: 999,
     paddingHorizontal: 8,
     fontSize: 14,
