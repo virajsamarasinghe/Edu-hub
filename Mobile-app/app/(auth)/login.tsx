@@ -53,7 +53,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/login', {
+      const response = await axios.post('http://192.168.8.142:5001/login', {
         studentId,
         password
       });
@@ -62,7 +62,7 @@ const Login = () => {
 
       await AsyncStorage.setItem('isLoggedIN', 'true');
 
-      alert('Login successful');
+      //alert('Login successful');
       // Navigate to the home screen or another screen after successful login
        router.push('/home');
     } catch (error) {

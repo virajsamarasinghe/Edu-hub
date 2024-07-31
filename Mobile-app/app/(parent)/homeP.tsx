@@ -22,20 +22,21 @@ export default function Home() {
 
             </TouchableOpacity>
             <TouchableOpacity style={styles.box1}>
-                <Image source={require('./../../assets/icon/quiz.png')} style={styles.quizImage} />
-                <Text style={styles.quizText}>Quiz</Text>
-                <Text style={styles.quiznoteText}>Upcoming Quizes</Text>
+                <Image source={require('./../../assets/icon/attendance.png')} style={styles.quizImage} />
+                <Text style={styles.quizText}>Attendance</Text>
+                <Text style={styles.quiznoteText}>Attendance of your child </Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.box2} >
-            <Image source={require('./../../assets/icon/resourcess.png')} style={styles.resourcesImage} />
-                <Text style={styles.resourcesText}>Resources</Text>
-                <Text style={styles.resourcenoteText}>You can download all the resources from here!</Text>
+            <Image source={require('./../../assets/icon/progress.png')} style={styles.resourcesImage} />
+                <Text style={styles.resourcesText}>Progress</Text>
+                <Text style={styles.resourcenoteText}> progress of your child{'\n'}  according to his marks</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.box3} >
-            <Image source={require('./../../assets/icon/progress.png')} style={styles.progressImage} />
-                <Text style={styles.progressText}>Progress</Text>
-                <Text style={styles.progressnoteText}>Your progress according{'\n'} to your marks</Text>
+            <Image source={require('./../../assets/icon/contact.png')} style={styles.progressImage} />
+                <Text style={styles.progressText}>Contact</Text>
+                <Text style={styles.progressnoteText}>You can contact tutor or institute
+                </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.box4} >
             <Image source={require('./../../assets/icon/chat.png')} style={styles.chatImage} />

@@ -66,7 +66,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/register', {
+      const response = await axios.post('http://192.168.8.142:5001/register', {
         firstName,
         lastName,
         emailAddress,
@@ -112,7 +112,7 @@ const Signup = () => {
           <Text style={{ fontSize: 35, fontFamily: 'outfit-bold', paddingBottom: 10, textAlign: 'center' }}>Create Your Account!!!</Text>
           <Stack.Screen options={{ headerBackVisible: !pendingVerification }} />
 
-          {!pendingVerification && (
+          
             <View>
               <Dropdown
                 style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
@@ -211,16 +211,9 @@ const Signup = () => {
                 <Text style={styles.buttonText}>SignUp</Text>
               </Pressable>
             </View>
-          )}
+          
 
-          {/* {pendingVerification && (
-            <View>
-              <View>
-                <TextInput value={code} placeholder="Code..." style={styles.inputField} onChangeText={setCode} />
-              </View>
-              <Button title="Verify Email" color={'#6c47ff'} />
-            </View>
-          )} */}
+
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
