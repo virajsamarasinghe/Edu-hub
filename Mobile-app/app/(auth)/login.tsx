@@ -9,6 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 interface DropdownItem {
   label: string;
@@ -105,9 +106,9 @@ const Login = () => {
         <View style={styles.welcome}>
           <LottieView style={{ flex: 1 }} source={require('../../assets/animation/1.json')} autoPlay loop />
         </View>
-        <Text style={{ fontSize: 35, padding: 20, marginBottom: 10, marginTop: -50, color: '#fff', textAlign: 'center' }}>Edu-Hub</Text>
+        <Text style={{ fontSize:hp('5%'), padding: hp('2%'), marginTop:-hp('7%'), color: '#fff', textAlign: 'center' }}>Edu-Hub</Text>
         <View style={styles.container}>
-          <Text style={{ fontSize: 33, fontFamily: 'outfit-bold', paddingBottom: 30, textAlign: 'center' }}>Hi!, Please Login</Text>
+          <Text style={{ fontSize:hp('4%'), fontFamily: 'outfit-bold', paddingBottom:hp('2%'), paddingTop:-hp('1%'), textAlign: 'center' }}>Hi!, Please Login</Text>
 
           <Dropdown
             style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
@@ -135,7 +136,7 @@ const Login = () => {
               />
             )}
           />
-          <Text  style={{ padding: 3, marginLeft: -220 }}>Student ID</Text>
+          <Text  style={styles.label}>Student ID</Text>
           <TextInput
             autoCapitalize="none"
             placeholder="Enter your Student ID"
@@ -145,7 +146,7 @@ const Login = () => {
             style={styles.inputField}
           />
 
-          <Text  style={{ padding: 3, marginLeft: -220 }}>Password</Text>
+          <Text  style={styles.label}>Password</Text>
           <TextInput
             placeholder="Enter your password"
             placeholderTextColor="#ACACAA"
@@ -191,14 +192,18 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: '#8C78F0',
     padding: 5,
+    flexGrow: 1,
+    
   },
   container: {
+    marginTop:-hp('2%'),
+    paddingTop:-hp('3%'),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 40,
+    padding: wp('15%'),
+    //paddingBottom: 40,
     width: '100%',
-    height: 540,
+    height: hp('66%'),	
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
@@ -208,77 +213,74 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 10,
     elevation: 5,
+    
   },
   inputField: {
-    marginVertical: 4,
-    height: 50,
-    width: 300,
+    marginVertical:  hp('0.5%'),
+    height: hp('6%'),
+    width:wp('75%'),
     borderWidth: 1,
     borderColor: '#6c47ff',
     borderRadius: 15,
-    padding: 10,
+    padding: wp('3%'),
     backgroundColor: '#fff',
   },
   label: {
-    marginVertical: 4,
-    fontSize: 16,
+    alignSelf: 'flex-start',
+    marginLeft: -wp('2%'),
+    fontSize: hp('1.6%'),
     color: 'rgba(75, 85, 99, 1)',
+    marginBottom: hp('0.4%'),
   },
   linkText: {
-    fontSize: 13,
+    fontSize: hp('1.6%'),
     color: 'rgba(75, 85, 99, 1)',
-    marginVertical: 4,
+    marginVertical: hp('1%'),
   },
   button: {
     backgroundColor: '#6c47ff',
-    padding: 12,
+    padding: hp('1.5%'),
     borderRadius: 99,
     alignItems: 'center',
-    marginTop: 16,
-    width: 300,
-    height: 46,
+    marginTop: hp('2%'),
+    width: wp('75%'),
+   
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize:  hp('2.3%'),
   },
   signUpButton: {
     backgroundColor: '#fff',
-    padding: 10,
+    padding: hp('1.2%'),
     borderRadius: 99,
     borderWidth: 1,
     borderColor: '#6c47ff',
     alignItems: 'center',
-    marginTop: 18,
-    width: 300,
-    height: 46,
+    marginTop: hp('2%'),
+    width:wp('75%'),
+   
   },
   signUpText: {
     color: '#6c47ff',
-    fontSize: 20,
+    fontSize:hp('2.4%'),
   },
   welcome: {
-    height: 310,
-    marginTop: 20,
+    height:hp('35%'),
+    marginTop: hp('3%'),
   },
-  picker: {
-    width: '80%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-  },
+
   dropdown: {
-    height: 50,
+    height: hp('6%'),
+    width:wp('75%'),
     borderWidth: 1,
     borderColor: '#6c47ff',
     borderRadius: 15,
-    padding: 10,
-    width: 300,
-    marginVertical: 8,
+    padding: wp('3%'),
+    marginVertical:hp('1%'),
   },
   icon: {
-    marginRight: 5,
+    marginRight: wp('2%'),
   },
   Label: {
     position: 'absolute',
@@ -290,19 +292,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: hp('2%'),
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: hp('2%'),
   },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
+ 
   eyeIcon: {
     position: 'absolute',
-    right: 60,
-    top:295
+    right: wp('13%'),
+    top:hp('32%')
     
   },
 });
