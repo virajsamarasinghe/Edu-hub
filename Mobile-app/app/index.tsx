@@ -6,37 +6,25 @@ import { useRouter } from 'expo-router';
 export default function StartPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const getData = async () => {
+  const checkLoginStatus = async () => {
     try {
-      const data = await AsyncStorage.getItem('isLoggedIN');
-      console.log(data, 'at StartPage');
-      if (data === 'true') {
-        setIsLoggedIn(true);
+      // Check for student login
+      const studentLogin = await AsyncStorage.getItem('isLoggedIN');
+      if (studentLogin === 'true') {
         router.push('/home');
-      } else {
-        setIsLoggedIn(false);
-        router.push('/login');
+        return;
       }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const getDataP = async () => {
-    try {
-      const data = await AsyncStorage.getItem('isLoggedINP');
-      console.log(data, 'at StartPage');
-      if (data === 'true') {
-        setIsLoggedIn(true);
+      // Check for parent login
+      const parentLogin = await AsyncStorage.getItem('isLoggedINP');
+      if (parentLogin === 'true') {
         router.push('/homeP');
-      } else {
-        setIsLoggedIn(false);
-        router.push('/loginP');
+        return;
       }
+
+      // If no user is logged in, navigate to start
+      router.push('/start');
     } catch (error) {
       console.error(error);
     } finally {
@@ -45,12 +33,8 @@ export default function StartPage() {
   };
 
   useEffect(() => {
-    getData();
-    getDataP();
+    checkLoginStatus();
   }, []);
-
-
-
 
   if (loading) {
     return (
@@ -59,7 +43,6 @@ export default function StartPage() {
       </View>
     );
   }
-
 
   return null;
 }
