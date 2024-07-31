@@ -37,7 +37,7 @@ const Login = () => {
       setValue(null);
       setIsFocus(false);
       setStudentId('');
-      setPassword('')
+      setPassword('');
 
     }, [])
   );
