@@ -191,7 +191,7 @@ const Login = () => {
 const styles = StyleSheet.create({
   content: {
     backgroundColor: '#8C78F0',
-    padding: 5,
+    padding: wp('1%'),
     flexGrow: 1,
     
   },
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 40,
+    borderRadius: wp('10%'),
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
@@ -282,6 +282,9 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: wp('2%'),
   },
+
+
+
   Label: {
     position: 'absolute',
     backgroundColor: 'white',
@@ -291,6 +294,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     fontSize: 14,
   },
+
   placeholderStyle: {
     fontSize: hp('2%'),
   },
@@ -301,7 +305,7 @@ const styles = StyleSheet.create({
   eyeIcon: {
     position: 'absolute',
     right: wp('13%'),
-    top:hp('32%')
+    top:hp('31.9%')
     
   },
 });

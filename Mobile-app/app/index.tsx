@@ -12,23 +12,31 @@ export default function StartPage() {
       // Check for student login
       const studentLogin = await AsyncStorage.getItem('isLoggedIN');
       if (studentLogin === 'true') {
-        router.push('/home');
+        setTimeout(() => {
+          router.push('/home');
+        }, 2000); // Add delay of 2 seconds
         return;
       }
 
       // Check for parent login
       const parentLogin = await AsyncStorage.getItem('isLoggedINP');
       if (parentLogin === 'true') {
-        router.push('/homeP');
+        setTimeout(() => {
+          router.push('/homeP');
+        }, 2000); // Add delay of 2 seconds
         return;
       }
 
       // If no user is logged in, navigate to start
-      router.push('/start');
+      setTimeout(() => {
+        router.push('/start');
+      }, 2000); // Add delay of 2 seconds
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000); // Ensure the loading state is set to false after 2 seconds
     }
   };
 

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, TextInput, Button, Pressable, Text, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const Verify = () => {
   const router = useRouter();
@@ -98,19 +99,22 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: '#8C78F0',
     padding: 5,
+    flexGrow: 1,
   },
   container: {
+    marginTop: -hp('1%'),
+    paddingTop: hp('6%'),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom: 80,
-    marginTop: 0,
+    padding: wp('15%'),
+    
+    
     width: '100%',
-    height: 510,
+    height: hp('60%'),
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 40,
+    borderRadius: wp('10%'),
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.2,
@@ -118,50 +122,53 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
-    fontSize: 33,
+    fontSize: hp('5%'),
+    padding: hp('2%'),
     fontFamily: 'outfit-bold',
-    paddingBottom: 40,
-    marginTop: -80,
+    
+    marginTop: -hp('7%'),
     textAlign: 'center',
   },
   label: {
-    padding: 5,
-    marginLeft: -150,
+    alignSelf: 'flex-start',
+    marginLeft: -wp('2%'),
+    fontSize: hp('1.6%'),
+    color: 'rgba(75, 85, 99, 1)',
+    marginBottom: hp('0.4%'),
   },
   inputField: {
-    marginVertical: 4,
-    height: 50,
-    width: 300,
+    marginVertical:  hp('0.5%'),
+    height: hp('6%'),
+    width:wp('75%'),
     borderWidth: 1,
     borderColor: '#6c47ff',
     borderRadius: 15,
-    padding: 10,
+    padding: wp('3%'),
     backgroundColor: '#fff',
   },
   button: {
     backgroundColor: '#6c47ff',
-    padding: 12,
+    padding: hp('1.5%'),
     borderRadius: 99,
     alignItems: 'center',
-    marginTop: 20,
-    width: 300,
-    height: 46,
+    marginTop: hp('2%'),
+    width: wp('75%'),
   },
   buttonDisabled: {
     backgroundColor: '#a3a3a3',
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize:  hp('2.3%'),
   },
   linkText: {
-    fontSize: 13,
+    fontSize: hp('1.6%'),
     color: 'rgba(75, 85, 99, 1)',
-    marginVertical: 10,
+    marginVertical: hp('1%'),
   },
   welcome: {
-    height: 360,
-    marginTop: 20,
+    height: hp('42%'),
+    marginTop: hp('4%'),
   },
 });
 
