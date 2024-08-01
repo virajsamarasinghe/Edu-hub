@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 const Login = () => {
 
@@ -53,7 +53,7 @@ const Login = () => {
   >
       <View style={styles.iconContainer}>
       <TouchableOpacity onPress={() => router.replace('/login')}>
-      <Ionicons name="arrow-back-outline" size={28} style={styles.icon} color="white" />
+      <Ionicons name="arrow-back-outline" size={wp('7%')} style={styles.icon} color="white" />
       </TouchableOpacity>
       </View>
 
@@ -62,13 +62,13 @@ const Login = () => {
       <View style={styles.welcome}>
         <LottieView style={{flex:1}} source={require('../../assets/animation/1.json')} autoPlay loop/>
       </View>
-      <Text style={{fontSize:35,padding:20,marginBottom:10,marginTop:-50,color:'#fff',textAlign:'center'}}>Edu-Hub</Text>
+      <Text style={{fontSize:hp('5%'),padding:hp('2%'),marginTop:-hp('6%'),color:'#fff',textAlign:'center'}}>Edu-Hub</Text>
     <View style={styles.container}>
 
-      <Text style={{fontSize:33, fontFamily:'outfit-bold', paddingBottom:30,textAlign:'center'}}>Hi!, Please Login</Text>
+      <Text style={{fontSize:hp('4%'), fontFamily:'outfit-bold', paddingBottom:hp('4%'),textAlign:'center'}}>Hi!, Please Login</Text>
      
     
-      <Text style={{padding:3,marginLeft:-260}}>Email</Text>
+      <Text style={styles.label}>Email</Text>
       <TextInput
             autoCapitalize="none"
             placeholder="Email Address"
@@ -77,7 +77,7 @@ const Login = () => {
             onChangeText={setEmailAddress}
             style={styles.inputField}
           />
-      <Text  style={{padding:3,marginLeft:-230}}>Password</Text>
+      <Text  style={styles.label}>Password</Text>
       <TextInput
             placeholder="Enter your password"
             placeholderTextColor="#ACACAA"
@@ -103,7 +103,7 @@ const Login = () => {
         <Text style={styles.buttonText}>Login</Text>
       </Pressable>
 
-      <Link href="/reset" asChild>
+      <Link href="/resetP" asChild>
         <Pressable >
         <Text style={styles.linkText}>Forgot password?</Text>
         </Pressable>
@@ -131,14 +131,14 @@ const styles = StyleSheet.create({
     
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
-    paddingBottom:40,
+    padding: wp('3%'),
+    paddingBottom:hp('8%'),
     width: '100%',
-    height: 540,
+    height: hp('66%'),
     backgroundColor: '#fff', 
     borderWidth: 1, 
     borderColor: '#ccc', 
-    borderRadius: 40, 
+    borderRadius: wp('10%'), 
     //borderBottomLeftRadius: 0, 
     //borderBottomRightRadius: 0,
     shadowColor: '#000000', // Shadow color
@@ -150,101 +150,73 @@ const styles = StyleSheet.create({
   
   },
   inputField: {
-    marginVertical: 4,
-    
-    height: 50,
-    width:300,
+    marginVertical:  hp('0.5%'),
+    height: hp('6%'),
+    width:wp('75%'),
     borderWidth: 1,
     borderColor: '#6c47ff',
     borderRadius: 15,
-    padding: 10,
+    padding: wp('3%'),
     backgroundColor: '#fff',
   },
   label: {
-    marginVertical: 4,
-    fontSize: 16,
+    alignSelf: 'flex-start',
+    marginLeft: wp('10%'),
+    fontSize: hp('1.6%'),
     color: 'rgba(75, 85, 99, 1)',
+    marginBottom: hp('0.4%'),
   },
   linkText: {
-    fontSize: 13,
+    fontSize: hp('1.6%'),
     color: 'rgba(75, 85, 99, 1)',
-    marginVertical: 4,
+    marginVertical: hp('1%'),
   },
   button: {
     backgroundColor: '#6c47ff',
-    padding: 12,
+    padding: hp('1.5%'),
     borderRadius: 99,
     alignItems: 'center',
-    marginTop: 16,
-    width:300,
-    height:46
+    marginTop: hp('2%'),
+    width: wp('75%'),
    
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize:  hp('2.3%'),
   },
   signUpButton: {
     backgroundColor: '#fff',
-    padding: 10,
+    padding: hp('1.2%'),
     borderRadius: 99,
     borderWidth: 1,
     borderColor: '#6c47ff',
     alignItems: 'center',
-    marginTop: 18,
-    width:300,
-    height:46
+    marginTop: hp('2%'),
+    width:wp('75%'),
   
   },
   signUpText: {
     color: '#6c47ff',
-    fontSize: 20,
+    fontSize:hp('2.4%'),
   },
   welcome:{
-    height:310, 
-    marginTop:30
+    height:hp('35%'),
+    marginTop: hp('3%'),
     
     
   },
-  picker: {
-    width: '80%',
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-  },
-  dropdown: {
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#6c47ff',
-    borderRadius: 15,
-    padding:10,
-    width: 300,
-    marginVertical: 8,
-  },
+ 
+
   icon: {
-    marginRight: 5,
-    marginTop:5
+    marginRight: wp('2%'),
+    marginTop: hp('2.5%')
   },
-  Label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
+ 
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: hp('2%'),
   },
-  selectedTextStyle: {
-    fontSize: 16,
-  },
-  iconStyle: {
-    width: 20,
-    height: 20,
-  },
+ 
+ 
   iconContainer: {
     position: 'absolute',
     top: 0,
@@ -252,12 +224,12 @@ const styles = StyleSheet.create({
     zIndex: 999,
     paddingTop: Platform.OS === 'ios' ? 45 : 15, // Adjust as per your design
     paddingHorizontal: 15,
-    backgroundColor: 'rgba(0, 0, 0, 0)', // Same background as content
+    backgroundColor:'transparent', // Same background as content
   },
   eyeIcon: {
     position: 'absolute',
-    right: 60,
-    top:260
+    right: wp('13%'),
+    top:hp('29%')
     
   },
 
