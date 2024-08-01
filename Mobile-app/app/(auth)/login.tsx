@@ -37,7 +37,7 @@ const Login = () => {
       setValue(null);
       setIsFocus(false);
       setStudentId('');
-      setPassword('')
+      setPassword('');
 
     }, [])
   );
@@ -281,6 +281,18 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: wp('2%'),
+  },
+
+
+
+  Label: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    left: wp('6%'),
+    top: hp('2%'),
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
   },
 
   placeholderStyle: {
