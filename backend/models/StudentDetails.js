@@ -6,6 +6,8 @@ const userSchema = new mongoose.Schema({
   emailAddress: { type: String, unique: true },
   password: String,
   studentId: String,
+  phone: String,
+  profilePhoto: String,
   verificationCode: String,
   isVerified: { type: Boolean, default: false },
 //   resetToken: String,

@@ -24,6 +24,8 @@ const User = mongoose.model('Students');
 require('./models/ParentDetails');
 const Parent = mongoose.model('Parents');
 
+
+
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -31,7 +33,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS
   }
 });
-
 const sendVerificationCode = (email, code) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -48,7 +49,6 @@ const sendVerificationCode = (email, code) => {
     }
   });
 };
-
 const sendStudentIdEmail = (email, studentId) => {
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -65,7 +65,6 @@ const sendStudentIdEmail = (email, studentId) => {
       }
     });
   };
-
 app.post("/register", [
   body('emailAddress').isEmail().withMessage('Invalid email format'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters long')
@@ -85,6 +84,7 @@ app.post("/register", [
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const studentId = `eg21${(await User.countDocuments() + 1).toString().padStart(4, '0')}`;
+    const phone = '123-456-789';
     const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
 
     const newUser = new User({
@@ -93,6 +93,7 @@ app.post("/register", [
       emailAddress,
       password: hashedPassword,
       studentId,
+      phone,
       verificationCode,
       isVerified: false,
       verificationCodeExpiry: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
@@ -107,7 +108,6 @@ app.post("/register", [
     res.status(500).send({ status: "error", data: error.message });
   }
 });
-
 app.post('/verify-email', async (req, res) => {
   const { code } = req.body;
 
@@ -131,7 +131,6 @@ app.post('/verify-email', async (req, res) => {
     res.status(500).send({ status: 'error', data: error.message });
   }
 });
-
 app.post('/resend-verification-code', async (req, res) => {
     const { email } = req.body;
   
@@ -154,7 +153,6 @@ app.post('/resend-verification-code', async (req, res) => {
       res.status(500).send({ status: 'error', data: error.message });
     }
   });
-
 app.post("/login", [
     body('studentId').notEmpty().withMessage('Student ID is required'),
     body('password').notEmpty().withMessage('Password is required')
@@ -183,7 +181,6 @@ app.post("/login", [
       res.status(500).send({ status: "error", data: error.message });
     }
   });
-
   app.get('/test/parent/:id', async (req, res) => {
     try {
       const parent = await Parent.findById(req.params.id).select('-password');
@@ -196,10 +193,6 @@ app.post("/login", [
       res.status(500).json({ message: 'Server error' });
     }
   });
-
- 
-  
-
   app.post('/reset-password', async (req, res) => {
     const { emailAddress, oldPassword, newPassword, confirmPassword } = req.body;
   
@@ -227,6 +220,86 @@ app.post("/login", [
       res.status(500).send({ message: error.message });
     }
   });
+   app.post('/phone', async (req, res) => {
+    const { studentId, phone } = req.body;
+  
+    try {
+      const user = await User.findOne({ studentId });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      user.phone = phone;
+      await user.save();
+      res.json({ message: 'Phone number updated successfully', user });
+    } catch (error) {
+      console.error('Error updating phone number:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  app.post('/firstname', async (req, res) => {
+    const { studentId, firstName } = req.body;
+  
+    try {
+      const user = await User.findOne({ studentId });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      user.firstName = firstName;
+      await user.save();
+      res.json({ message: 'firstname updated successfully', user });
+    } catch (error) {
+      console.error('Error updating firstname:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  app.post('/lastname', async (req, res) => {
+    const { studentId, lastName } = req.body;
+  
+    try {
+      const user = await User.findOne({ studentId });
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      user.lastName = lastName;
+      await user.save();
+      res.json({ message: 'lastname updated successfully', user });
+    } catch (error) {
+      console.error('Error updating lastname:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  });
+  app.get('/get-user-data', async (req, res) => {
+    const { studentId } = req.query;
+  
+    try {
+      const user = await User.findOne({ studentId });
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+      res.json({
+        status: 'ok',
+        data: {
+          phone: user.phone,
+          emailAddress: user.emailAddress,
+          firstName: user.firstName,
+          lastName: user.lastName
+        }
+      });
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      res.status(500).json({ error: error.message });
+    }
+  });
+
+  
+  
+  
+  
+  
+  
 
 
 

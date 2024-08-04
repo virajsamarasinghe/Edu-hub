@@ -20,6 +20,16 @@ const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
 
   const handleResetPassword = async () => {
+
+    if (!emailAddress) {
+      Alert.alert('Please enter your email address');
+      return;
+    }
+
+    if (!oldPassword ||!newPassword ||!confirmPassword) {
+      Alert.alert('Please fill in all fields');
+      return;
+    }
     if (newPassword !== confirmPassword) {
       Alert.alert('Error', 'Passwords do not match');
       return;
@@ -27,7 +37,7 @@ const ResetPassword = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/reset-passwordP', {
+      const response = await axios.post('http://192.168.1.12:5001/reset-passwordP', {
         emailAddress,
         oldPassword,
         newPassword,
@@ -61,11 +71,13 @@ const ResetPassword = () => {
         <Text style={styles.title}>Reset Your Password</Text>
         <Text  style={[styles.label]}>Email</Text>
           <TextInput
+            autoCapitalize="none"
             style={styles.inputField}
             placeholder="Email"
             placeholderTextColor="#ACACAA"
             value={emailAddress}
             onChangeText={setEmailAddress}
+            
           />
            <Text  style={[styles.label]}>Old_Password</Text>
           <TextInput

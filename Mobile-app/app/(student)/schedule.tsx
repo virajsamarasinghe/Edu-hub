@@ -19,10 +19,7 @@ export default function Home() {
 
 
             </TouchableOpacity>
-            <Text style={styles.hellovirajText}>Hello Viraj,</Text>
-            <Text style={styles.yourLearningtimeText}>Your Learning Time</Text>
-            <Text style={styles.welcomeText}>Welcome to</Text>
-            <Text style={styles.eduHubText}>Edu-Hub!</Text>
+           
         </LinearGradient>
     );
 }
