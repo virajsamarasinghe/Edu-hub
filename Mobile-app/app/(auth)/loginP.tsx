@@ -26,7 +26,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/loginP', {
+      const response = await axios.post('http://192.168.1.12:5001/loginP', {
         emailAddress,
         password
       });
@@ -99,20 +99,20 @@ const Login = () => {
       
 
 
-      <Pressable style={styles.button} onPress={handleLogin}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       <Link href="/resetP" asChild>
-        <Pressable >
+        <TouchableOpacity >
         <Text style={styles.linkText}>Forgot password?</Text>
-        </Pressable>
+        </TouchableOpacity>
       </Link>
 
       <Link href="/signupP" asChild>
-        <Pressable style={styles.signUpButton}>
+        <TouchableOpacity style={styles.signUpButton}>
           <Text style={styles.signUpText}>Create New Account</Text>
-        </Pressable>
+        </TouchableOpacity>
       </Link>
     </View>
     </ScrollView>

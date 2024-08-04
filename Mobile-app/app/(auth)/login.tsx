@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import { Link } from 'expo-router';
-import React, { useState, useCallback } from 'react';
-import { View, StyleSheet,TouchableOpacity, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { View, StyleSheet,TouchableOpacity, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform,BackHandler } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -30,6 +30,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [firstName, setFirstName] = useState('');
 
   useFocusEffect(
     useCallback(() => {
@@ -41,6 +42,24 @@ const Login = () => {
 
     }, [])
   );
+
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        BackHandler.exitApp(); // Exits the app when back button is pressed
+        return true; // Prevents the default behavior
+      };
+  
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [])
+  );
+  
+
+
+
 
   const handleLogin = async () => {
     if (!value) {
@@ -54,13 +73,29 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/login', {
+      const response = await axios.post('http://192.168.1.12:5001/login', {
         studentId,
         password
       });
       setLoading(false);
       console.log('Login successful:', response.data);
 
+      //const studId = response.data.studentId;
+      await AsyncStorage.setItem('userId', studentId);
+
+      const userDataResponse = await axios.get('http://192.168.1.12:5001/get-user-data', {
+        params: { studentId }
+      });
+
+      
+
+       
+      const { firstName, emailAddress, phone } = userDataResponse.data.data;
+
+      // Store user data in AsyncStorage
+      await AsyncStorage.setItem('firstName', firstName);
+      await AsyncStorage.setItem('emailAddress', emailAddress);
+      await AsyncStorage.setItem('phone', phone);
       await AsyncStorage.setItem('isLoggedIN', 'true');
 
       //alert('Login successful');
@@ -167,20 +202,20 @@ const Login = () => {
             </TouchableOpacity>
           
 
-          <Pressable style={styles.button} onPress={handleLogin}>
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={styles.buttonText}>Login</Text>
-          </Pressable>
+          </TouchableOpacity>
 
           <Link href="/reset" asChild>
-            <Pressable>
+            <TouchableOpacity>
               <Text style={styles.linkText}>Forgot password?</Text>
-            </Pressable>
+            </TouchableOpacity>
           </Link>
 
           <Link href="/signup" asChild>
-            <Pressable style={styles.signUpButton}>
+            <TouchableOpacity style={styles.signUpButton}>
               <Text style={styles.signUpText}>Create New Account</Text>
-            </Pressable>
+            </TouchableOpacity>
           </Link>
         </View>
       </ScrollView>

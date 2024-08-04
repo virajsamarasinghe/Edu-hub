@@ -46,9 +46,9 @@ const Login = () => {
       
 
 
-      <Pressable style={styles.button}>
+      <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>Login</Text>
-      </Pressable>
+      </TouchableOpacity>
 
       <Link href="/reset" asChild>
         <Pressable >

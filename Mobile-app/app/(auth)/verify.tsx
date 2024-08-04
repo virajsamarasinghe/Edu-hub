@@ -1,6 +1,6 @@
 import { Link, useRouter, useLocalSearchParams } from 'expo-router';
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TextInput, Button, Pressable, Text, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { View, StyleSheet, TextInput, Button, Pressable,TouchableOpacity, Text, Alert, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -26,7 +26,7 @@ const Verify = () => {
 
     
 
-      const response = await axios.post('http://192.168.8.142:5001/verify-email', { code });
+      const response = await axios.post('http://192.168.1.12:5001/verify-email', { code });
 
       if (response.data.status === 'success') {
         alert('Email verified successfully!');
@@ -42,7 +42,7 @@ const Verify = () => {
 
   const handleResendCode = async () => {
     try {
-      await axios.post('http://192.168.8.142:5001/resend-verification-code', { email });
+      await axios.post('http://192.168.1.12:5001/resend-verification-code', { email });
       setCountdown(60); // Reset the countdown timer
       setIsResendDisabled(true);
       alert('Verification code resent. Please check your email.');
@@ -74,20 +74,20 @@ const Verify = () => {
             value={code}
             onChangeText={setCode} // Update code state
           />
-          <Pressable style={styles.button} onPress={handleVerification}>
+          <TouchableOpacity style={styles.button} onPress={handleVerification}>
             <Text style={styles.buttonText}>Verify</Text>
-          </Pressable>
-          <Pressable 
+          </TouchableOpacity>
+          <TouchableOpacity 
             style={[styles.button, isResendDisabled && styles.buttonDisabled]} 
             onPress={handleResendCode} 
             disabled={isResendDisabled}
           >
             <Text style={styles.buttonText}>Resend Code ({countdown})</Text>
-          </Pressable>
+          </TouchableOpacity>
           <Link href="/help" asChild>
-            <Pressable>
+            <TouchableOpacity>
               <Text style={styles.linkText}>Help?</Text>
-            </Pressable>
+            </TouchableOpacity>
           </Link>
         </View>
       </ScrollView>

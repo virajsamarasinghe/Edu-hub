@@ -67,7 +67,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/register', {
+      const response = await axios.post('http://192.168.1.12:5001/register', {
         firstName,
         lastName,
         emailAddress,
@@ -208,9 +208,9 @@ const Signup = () => {
               />
             </TouchableOpacity>
 
-              <Pressable style={styles.button} onPress={handleCreateUser}>
+              <TouchableOpacity style={styles.button} onPress={handleCreateUser}>
                 <Text style={styles.buttonText}>SignUp</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           
 
