@@ -37,7 +37,7 @@ const ResetPassword = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.1.12:5001/reset-passwordP', {
+      const response = await axios.post('http://192.168.8.142:5001/reset-passwordP', {
         emailAddress,
         oldPassword,
         newPassword,
