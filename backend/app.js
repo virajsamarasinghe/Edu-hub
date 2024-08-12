@@ -329,13 +329,14 @@ app.post("/login", [
       }
   
       const hashedPassword = await bcrypt.hash(password, 10);
-     
+      const phone = '123-456-789';
       const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
   
       const newUser = new Parent({
         studentId,
         username,
         emailAddress,
+        phone,
         password: hashedPassword,
         verificationCode,
         isVerified: false,
@@ -452,6 +453,66 @@ app.post("/login", [
         res.send({ message: 'Password has been updated successfully' });
       } catch (error) {
         res.status(500).send({ message: error.message });
+      }
+    });
+
+    app.post('/phoneP', async (req, res) => {
+      const { emailAddress, phone } = req.body;
+    
+      try {
+        const user = await Parent.findOne({ emailAddress});
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+    
+        user.phone = phone;
+        await user.save();
+        res.json({ message: 'Phone number updated successfully', user });
+      } catch (error) {
+        console.error('Error updating phone number:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    });
+
+    app.post('/username', async (req, res) => {
+      const { emailAddress, username } = req.body;
+    
+      try {
+        const user = await Parent.findOne({ emailAddress });
+        if (!user) {
+          return res.status(404).json({ message: 'User not found' });
+        }
+    
+        user.username = username;
+        await user.save();
+        res.json({ message: 'username updated successfully', user });
+      } catch (error) {
+        console.error('Error updating username:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    });
+
+    app.get('/get-user-dataP', async (req, res) => {
+      const { emailAddress} = req.query;
+    
+      try {
+        const user = await Parent.findOne({ emailAddress});
+        if (!user) {
+          return res.status(404).json({ error: 'User not found' });
+        }
+        res.json({
+          status: 'ok',
+          data: {
+            username: user.username,
+            verificationCode: user.verificationCode,
+            phone: user.phone,
+            emailAddress: user.emailAddress,
+           
+          }
+        });
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ error: error.message });
       }
     });
 

@@ -26,12 +26,23 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.1.12:5001/loginP', {
+      const response = await axios.post('http://192.168.8.142:5001/loginP', {
         emailAddress,
         password
       });
       setLoading(false);
       console.log('Login successful:', response.data);
+
+      await AsyncStorage.setItem('userP',emailAddress);
+
+      const userDataResponseP = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+        params: { emailAddress}
+      });
+
+      const { username, phone } = userDataResponseP.data.data;
+      await AsyncStorage.setItem('username', username);
+     
+      await AsyncStorage.setItem('phoneP', phone);
 
       await AsyncStorage.setItem('isLoggedINP', 'true');
 
