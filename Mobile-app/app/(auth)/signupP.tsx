@@ -1,5 +1,6 @@
-import { Button, TextInput, View, StyleSheet,Pressable,Text,KeyboardAvoidingView, ScrollView ,Platform,TouchableOpacity } from 'react-native';
-import { useState } from 'react';
+import { Button, TextInput, View, StyleSheet,Pressable,Text,KeyboardAvoidingView, ScrollView ,Platform,TouchableOpacity, BackHandler } from 'react-native';
+
+import React, { useState, useCallback, useEffect } from 'react';
 import { Stack } from 'expo-router';
 import LottieView from 'lottie-react-native';
 import axios from 'axios';
@@ -26,6 +27,8 @@ const Signup = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+
+ 
 
   const handleCreateUser = async () => {
  

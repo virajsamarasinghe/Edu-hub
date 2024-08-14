@@ -50,7 +50,7 @@ const Login = () => {
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
-      <Link href="/reset" asChild>
+      <Link href="/verifyEmail" asChild>
         <Pressable >
         <Text style={styles.linkText}>Forgot password?</Text>
         </Pressable>

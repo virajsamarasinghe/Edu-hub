@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity, BackHandler } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import axios from 'axios';
 import React, { useState, useCallback, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -66,7 +66,7 @@ export default function Home() {
                 <Ionicons name="notifications-outline" size={30} color="#ffffff"  />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.iconContainerb}>
-                <Ionicons name="chatbubble-outline" size={30} color="#ffffff"  />
+                <AntDesign name="qrcode" size={30} color="#ffffff" />
 
 
             </TouchableOpacity>

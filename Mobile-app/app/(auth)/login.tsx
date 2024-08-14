@@ -131,6 +131,10 @@ const Login = () => {
     }
   };
 
+  const handleSignUpNavigation = () => {
+    router.push('/signup'); // This replaces the current screen with the signup screen, so back navigation is blocked
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -206,17 +210,16 @@ const Login = () => {
             <Text style={styles.buttonText}>Login</Text>
           </TouchableOpacity>
 
-          <Link href="/reset" asChild>
+          <Link href="/verifyEmail" asChild>
             <TouchableOpacity>
               <Text style={styles.linkText}>Forgot password?</Text>
             </TouchableOpacity>
           </Link>
 
-          <Link href="/signup" asChild>
-            <TouchableOpacity style={styles.signUpButton}>
+            <TouchableOpacity style={styles.signUpButton} onPress={handleSignUpNavigation}>
               <Text style={styles.signUpText}>Create New Account</Text>
             </TouchableOpacity>
-          </Link>
+        
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

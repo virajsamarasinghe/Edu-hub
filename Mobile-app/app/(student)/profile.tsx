@@ -3,7 +3,7 @@ import { Button, TextInput, View, StyleSheet, Image, Pressable, Text, KeyboardAv
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import AntDesign from '@expo/vector-icons/AntDesign';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FontAwesome } from '@expo/vector-icons';
@@ -192,11 +192,16 @@ export default function Profile() {
     const logout = async () => {
         try {
             await AsyncStorage.removeItem('isLoggedIN');
-            router.push('/login');
+            router.replace('/login');
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
+
+    const handlePress = () => {
+      router.push('/reset'); // Navigate to the /reset route
+    };
+
     const toggleEditFirstName = () => setIsEditingFirstName(!isEditingFirstName);
     const toggleEditLastName = () => setIsEditingLastName(!isEditingLastName);
     const toggleEditEmail = () => setIsEditingEmail(!isEditingEmail);
@@ -213,7 +218,7 @@ export default function Profile() {
                 <Ionicons name="notifications-outline" size={30} color="#ffffff"  />
             </TouchableOpacity>
             <TouchableOpacity style={styles.iconContainerb}>
-                <Ionicons name="chatbubble-outline" size={30} color="#ffffff"  />
+            <AntDesign name="qrcode" size={30} color="#ffffff" />
             </TouchableOpacity>
 
             <View style={styles.box}/>
@@ -334,11 +339,11 @@ export default function Profile() {
                             style={styles.inputField}
                             editable={false}
                         />
-                  <Link href="/reset" asChild>
-                    <TouchableOpacity onPress={toggleEditPassword} style={styles.editIcon}>
+                  
+                    <TouchableOpacity onPress={handlePress} style={styles.editIcon}>
                         <FontAwesome name="edit" size={24} color="black" />
                     </TouchableOpacity>
-                  </Link>
+                  
             </View>
 
             <TouchableOpacity style={styles.button} onPress={logout} >

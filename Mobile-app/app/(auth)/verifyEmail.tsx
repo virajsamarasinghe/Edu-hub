@@ -8,51 +8,33 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 const Verify = () => {
   const router = useRouter();
-  const { email } = useLocalSearchParams();
-  const [code, setCode] = useState('');
-  const [countdown, setCountdown] = useState(60); // 60 seconds countdown
-  const [isResendDisabled, setIsResendDisabled] = useState(true);
+ 
+  const [emailAddress, setEmailAddress] = useState('');
+ 
 
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
-      return () => clearTimeout(timer);
-    } else {
-      setIsResendDisabled(false);
-    }
-  }, [countdown]);
+  
 
   const handleVerification = async () => {
     try {
 
     
 
-      const response = await axios.post('http://192.168.8.142:5001/verify-email', { code });
+      const response = await axios.post('http://192.168.8.142:5001/sendcode', 
+        {emailAddress},
+      );
 
       if (response.data.status === 'success') {
-        alert('Email verified successfully!');
-        router.replace('/login'); // Navigate to login page after verification
+        
+        router.replace('/verificationCode'); // Navigate to login page after verification
       } else {
-        alert('Invalid verification code.');
+        alert('Invalid email.');
       }
     } catch (error) {
-      console.error('Verification failed:', error);
-      alert('Verification failed. Please try again.');
+      console.error('Email send failed:', error);
+      alert('Email send failed. Please try again.');
     }
   };
 
-
-  const handleResendCode = async () => {
-    try {
-      await axios.post('http://192.168.8.142:5001/resend-verification-code', { email });
-      setCountdown(60); // Reset the countdown timer
-      setIsResendDisabled(true);
-      alert('Verification code resent. Please check your email.');
-    } catch (error) {
-      console.error('Resend failed:', error);
-      alert('Resend failed. Please try again.');
-    }
-  };
 
 
 
@@ -67,32 +49,22 @@ const Verify = () => {
           <LottieView style={{ flex: 1 }} source={require('../../assets/animation/4.json')} autoPlay loop />
         </View>
         <View style={styles.container}>
-          <Text style={styles.title}>Verify your email</Text>
-          <Text style={styles.label}>Enter your code here:</Text>
+    
+          <Text style={styles.label}>Enter your EmailAddress:</Text>
 
           <TextInput
             autoCapitalize="none"
-            placeholder="OTP code"
-            placeholderTextColor="#ACACAA"
             style={styles.inputField}
-            value={code}
-            onChangeText={setCode} // Update code state
+            placeholder="Email"
+            placeholderTextColor="#ACACAA"
+            value={emailAddress}
+            onChangeText={setEmailAddress}
           />
           <TouchableOpacity style={styles.button} onPress={handleVerification}>
-            <Text style={styles.buttonText}>Verify</Text>
+            <Text style={styles.buttonText}>Send Code</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            style={[styles.button, isResendDisabled && styles.buttonDisabled]} 
-            onPress={handleResendCode} 
-            disabled={isResendDisabled}
-          >
-            <Text style={styles.buttonText}>Resend Code ({countdown})</Text>
-          </TouchableOpacity>
-          <Link href="/help" asChild>
-            <TouchableOpacity>
-              <Text style={styles.linkText}>Help?</Text>
-            </TouchableOpacity>
-          </Link>
+         
+          
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -107,7 +79,7 @@ const styles = StyleSheet.create({
   },
   container: {
     marginTop: -hp('1%'),
-    paddingTop: hp('6%'),
+    paddingTop: -hp('5%'),
     justifyContent: 'center',
     alignItems: 'center',
     padding: wp('15%'),
@@ -155,7 +127,7 @@ const styles = StyleSheet.create({
     padding: hp('1.5%'),
     borderRadius: 99,
     alignItems: 'center',
-    marginTop: hp('2%'),
+    marginTop: hp('5%'),
     width: wp('75%'),
   },
   buttonDisabled: {

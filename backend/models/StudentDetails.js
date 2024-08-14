@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   phone: String,
   profilePhoto: String,
   verificationCode: String,
+  qrCode: String,
   isVerified: { type: Boolean, default: false },
 //   resetToken: String,
 //   resetTokenExpiry: Date,

@@ -77,7 +77,7 @@ const Signup = () => {
       console.log('Registration successful:', response.data);
       alert('Registration successful! Please check your email for verification.');
       setPendingVerification(true);
-      router.push({
+      router.replace({
         pathname: '/verify',
         params: { email: emailAddress }
       })
