@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Image, StyleSheet,Text } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -29,6 +30,11 @@ export default function QRCodePage() {
     }, []);
 
     return (
+        <LinearGradient
+        colors={['#8C78F0', 'rgba(140, 120, 140, 0)']}
+        locations={[0.37, 0.91]}
+        style={styles.container}
+    >
         <View style={styles.container}>
             {qrCode ? (
                 <Image
@@ -39,6 +45,7 @@ export default function QRCodePage() {
                 <Text>Loading QR code...</Text>
             )}
         </View>
+        </LinearGradient>
     );
 }
 
@@ -47,11 +54,12 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#fff',
+      
     },
     qrImage: {
-        width: 250,
-        height: 250,
+        width: 300,
+        height: 300,
         resizeMode: 'contain',
+        borderRadius: 35,
     },
 });
