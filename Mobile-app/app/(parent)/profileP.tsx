@@ -158,11 +158,17 @@ export default function Profile() {
     const logout = async () => {
         try {
             await AsyncStorage.removeItem('isLoggedINP');
-            router.push('/login');
+            router.replace('/login');
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
+
+    const handlePress = () => {
+      router.push('/resetP'); // Navigate to the /reset route
+    };
+
+
     const toggleEditUsername = () => setIsEditingUsername(!isEditingUsername);
     const toggleEditPhone = () => setIsEditingPhone(!isEditingPhone);
     const toggleEditPassword = () => setIsEditingPassword(!isEditingPassword);
@@ -271,11 +277,11 @@ export default function Profile() {
                             style={styles.inputField}
                             editable={false}
                         />
-                  <Link href="/resetP" asChild>
-                    <TouchableOpacity onPress={toggleEditPassword} style={styles.editIcon}>
+                  
+                    <TouchableOpacity onPress={handlePress} style={styles.editIcon}>
                         <FontAwesome name="edit" size={24} color="black" />
                     </TouchableOpacity>
-                  </Link>
+                  
             </View>
 
             <TouchableOpacity style={styles.button} onPress={logout} >

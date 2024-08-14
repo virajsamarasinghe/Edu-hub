@@ -1,12 +1,13 @@
 
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { TouchableOpacity,View, StyleSheet, TextInput, Button, Pressable, Text, Alert,KeyboardAvoidingView, ScrollView ,Platform} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
 import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
@@ -17,6 +18,16 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
+
+    useFocusEffect(
+      useCallback(() => {
+        // Reset state when screen is focused
+       
+        setEmailAddress('');
+        setPassword('');
+  
+      }, [])
+    );
 
     const handleLogin = async () => {
     if (!emailAddress || !password) {
@@ -114,7 +125,7 @@ const Login = () => {
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
-      <Link href="/resetP" asChild>
+      <Link href="/verifyEmail" asChild>
         <TouchableOpacity >
         <Text style={styles.linkText}>Forgot password?</Text>
         </TouchableOpacity>
