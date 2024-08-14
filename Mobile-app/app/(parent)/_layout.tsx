@@ -41,7 +41,7 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <MaterialIcons name="payments" size={26} color={color} />
                 }}
             />
-            <Tabs.Screen name='profile'
+            <Tabs.Screen name='profileP'
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-outline" size={26} color={color} />,

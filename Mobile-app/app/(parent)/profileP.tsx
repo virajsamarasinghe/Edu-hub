@@ -15,19 +15,19 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 export default function Profile() {
     
-    const [email, setEmail] = useState('');
+    
     const [phone, setPhone] = useState('');
-    const [isEditingFirstName, setIsEditingFirstName] = useState(false);
-    const [isEditingLastName, setIsEditingLastName] = useState(false);
+    const [isEditingUsername, setIsEditingUsername] = useState(false);
+  
     const [isEditingEmail, setIsEditingEmail] = useState(false);
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [password, setPassword] = useState('');
     const [profileImage, setProfileImage] = useState(null);
-    const [firstName, setFirstName] = useState('');
+    const [username, setUsername] = useState('');
     const [lastName, setLastName] = useState('');
     const [Email, setEmailAddress] = useState('');
-    const [studentId, setStudentId] = useState('');
+    const [emailAddress, setemailAddress] = useState('');
     const router = useRouter();
     
 
@@ -58,23 +58,23 @@ export default function Profile() {
         }
     
         try {
-          const studentId = await AsyncStorage.getItem('userId');
-          if (!studentId) {
+          const emailAddress = await AsyncStorage.getItem('userP');
+          if (!emailAddress) {
             alert('User not found. Please log in again.');
             return;
           }
     
-          const response = await axios.post('http://192.168.8.142:5001/phone', {
-            studentId,
+          const response = await axios.post('http://192.168.8.142:5001/phoneP', {
+            emailAddress,
             phone,
           });
     
           // Assuming response.data contains the updated user profile including the phone number
-          if (response.data && response.data.phone) {
-            setPhone(response.data.phone);
+          if (response.data && response.data.phoneP) {
+            setPhone(response.data.phoneP);
     
             // Store the updated phone number in AsyncStorage
-            await AsyncStorage.setItem('phone', response.data.phone);
+            await AsyncStorage.setItem('phoneP', response.data.phoneP);
           }
     
           console.log('Phone number updated successfully:', response.data);
@@ -85,99 +85,65 @@ export default function Profile() {
         }
       };
 
-      const updateFirstname = async () => {
+      const updateUsername = async () => {
        
     
         try {
-          const studentId = await AsyncStorage.getItem('userId');
-          if (!studentId) {
+          const emailAddress = await AsyncStorage.getItem('userP');
+          if (!emailAddress) {
             alert('User not found. Please log in again.');
             return;
           }
     
-          const response = await axios.post('http://192.168.8.142:5001/firstname', {
-            studentId,
-            firstName,
+          const response = await axios.post('http://192.168.8.142:5001/username', {
+            emailAddress,
+            username,
           });
     
           // Assuming response.data contains the updated user profile including the phone number
-          if (response.data && response.data.firstName) {
-            setFirstName(response.data.firstName);
+          if (response.data && response.data.username) {
+            setUsername(response.data.username);
     
             // Store the updated phone number in AsyncStorage
-            await AsyncStorage.setItem('firstName', response.data.firstName);
+            await AsyncStorage.setItem('username', response.data.username);
           }
     
-          console.log('firstname updated successfully:', response.data);
-          setIsEditingFirstName(false);
+          console.log('username updated successfully:', response.data);
+          setIsEditingUsername(false);
         } catch (error) {
           console.error('Error updating firstname:', error);
           alert('Failed to update firstname. Please try again later.');
         }
       };
     
-      const updateLastname = async () => {
-       
-    
-        try {
-          const studentId = await AsyncStorage.getItem('userId');
-          if (!studentId) {
-            alert('User not found. Please log in again.');
-            return;
-          }
-    
-          const response = await axios.post('http://192.168.8.142:5001/lastname', {
-            studentId,
-            lastName,
-          });
-    
-          // Assuming response.data contains the updated user profile including the phone number
-          if (response.data && response.data.lastName) {
-            setLastName(response.data.lastName);
-    
-            // Store the updated phone number in AsyncStorage
-            await AsyncStorage.setItem('lastName', response.data.lastName);
-          }
-    
-          console.log('lastname updated successfully:', response.data);
-          setIsEditingLastName(false);
-        } catch (error) {
-          console.error('Error updating lastname:', error);
-          alert('Failed to update lastname. Please try again later.');
-        }
-      };
-
 
       useEffect(() => {
         const fetchPhoneFromDatabase = async () => {
           try {
             // Retrieve the user ID from AsyncStorage or any other stored state
-            const studentId = await AsyncStorage.getItem('userId');
-            if (!studentId) {
+            const emailAddress = await AsyncStorage.getItem('userP');
+            if (!emailAddress) {
               alert('User not found. Please log in again.');
               return;
             }
             
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.142:5001/get-user-data', {
-                params: { studentId }
+            const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+                params: { emailAddress}
               });
 
-              const { firstName, emailAddress, phone, lastName } = response.data.data;
+              const { username, phone } = response.data.data;
 
      
               setPhone(phone);
-              await AsyncStorage.setItem('phone', phone);
+              await AsyncStorage.setItem('phoneP', phone);
 
-              setFirstName(firstName);
-              await AsyncStorage.setItem('firstName', firstName);
+              setUsername(username);
+              await AsyncStorage.setItem('username', username);
 
-              setLastName(lastName);
-              await AsyncStorage.setItem('lastName', lastName);
-
-              setStudentId(studentId);
-              await AsyncStorage.setItem('userId', studentId);
+              setemailAddress(emailAddress);
+              await AsyncStorage.setItem('userP', emailAddress);
 
             
           } catch (error) {
@@ -191,15 +157,13 @@ export default function Profile() {
 
     const logout = async () => {
         try {
-            await AsyncStorage.removeItem('isLoggedIN');
+            await AsyncStorage.removeItem('isLoggedINP');
             router.push('/login');
         } catch (error) {
             console.error('Error logging out:', error);
         }
     };
-    const toggleEditFirstName = () => setIsEditingFirstName(!isEditingFirstName);
-    const toggleEditLastName = () => setIsEditingLastName(!isEditingLastName);
-    const toggleEditEmail = () => setIsEditingEmail(!isEditingEmail);
+    const toggleEditUsername = () => setIsEditingUsername(!isEditingUsername);
     const toggleEditPhone = () => setIsEditingPhone(!isEditingPhone);
     const toggleEditPassword = () => setIsEditingPassword(!isEditingPassword);
 
@@ -222,81 +186,54 @@ export default function Profile() {
             <TouchableOpacity style={styles.box1}>
                 <Image source={require('./../../assets/images/profile.png')} style={styles.profileImage} />
             </TouchableOpacity>
-            <Text style={styles.hellovirajText}>Hello {firstName},</Text>
-            <Text style={styles.idText}>ID : {studentId}</Text>
+            <Text style={styles.hellovirajText}>Hello {username},</Text>
+            
             <Text style={styles.profileText}>Profile</Text>
             <View style={styles.box2}>
             
 
-            <Text style={styles.label}>FirstName</Text>
+            <Text style={styles.label}>Username</Text>
       <View style={styles.inputContainer}>
-        {isEditingFirstName ? (
+        {isEditingUsername ? (
           <TextInput
             autoCapitalize="none"
-            value={firstName}
+            value={username}
             placeholder="firstname"
             placeholderTextColor="#ACACAA"
-            onChangeText={setFirstName}
+            onChangeText={setUsername}
             style={styles.inputField}
             
           />
         ) : (
-          <Text style={styles.inputField}>{firstName}</Text>
+          <Text style={styles.inputField}>{username}</Text>
         )}
-        {isEditingFirstName ? (
-          <TouchableOpacity onPress={updateFirstname} style={styles.saveIcon}>
+        {isEditingUsername ? (
+          <TouchableOpacity onPress={updateUsername} style={styles.saveIcon}>
             <FontAwesome name="save" size={24} color="black" />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={toggleEditFirstName} style={styles.editIcon}>
+          <TouchableOpacity onPress={toggleEditUsername} style={styles.editIcon}>
             <FontAwesome name="edit" size={24} color="black" />
           </TouchableOpacity>
         )}
       </View>
 
-      <Text style={styles.label}>LastName</Text>
-      <View style={styles.inputContainer}>
-        {isEditingLastName ? (
-          <TextInput
-            autoCapitalize="none"
-            value={lastName}
-            placeholder="lastname"
-            placeholderTextColor="#ACACAA"
-            onChangeText={setLastName}
-            style={styles.inputField}
-            
-          />
-        ) : (
-          <Text style={styles.inputField}>{lastName}</Text>
-        )}
-        {isEditingLastName ? (
-          <TouchableOpacity onPress={updateLastname} style={styles.saveIcon}>
-            <FontAwesome name="save" size={24} color="black" />
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity onPress={toggleEditLastName} style={styles.editIcon}>
-            <FontAwesome name="edit" size={24} color="black" />
-          </TouchableOpacity>
-        )}
-      </View>
-            <Text style={styles.label}>Email</Text>
-            <View style={styles.inputContainer}>
-           
-                <TextInput
-                    autoCapitalize="none"
-                    value={Email}
-                    placeholder="Email"
-                    placeholderTextColor="#ACACAA"
-                    onChangeText={setEmailAddress}
-                    style={styles.inputField}
-                    keyboardType="email-address"
-                    editable={false}
-                />
-           
-                
-            </View>
+     
+      <Text style={styles.label}>Email</Text>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        autoCapitalize="none"
+                        value={emailAddress}
+                        placeholder="Email"
+                        placeholderTextColor="#ACACAA"
+                        onChangeText={setEmailAddress}
+                        style={styles.inputField}
+                        keyboardType="email-address"
+                        editable={false}
+                    />
+                </View>
 
-            <Text style={styles.label}>Phone</Text>
+     <Text style={styles.label}>Phone</Text>
       <View style={styles.inputContainer}>
         {isEditingPhone ? (
           <TextInput
@@ -334,7 +271,7 @@ export default function Profile() {
                             style={styles.inputField}
                             editable={false}
                         />
-                  <Link href="/reset" asChild>
+                  <Link href="/resetP" asChild>
                     <TouchableOpacity onPress={toggleEditPassword} style={styles.editIcon}>
                         <FontAwesome name="edit" size={24} color="black" />
                     </TouchableOpacity>
@@ -458,7 +395,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center', // Center the profile image vertically
     },
     box1:{
-        top: -hp('5.6%'),
+        top: -hp('9%'),
         left: -wp('40%'),
     },
     box4:{
@@ -477,7 +414,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         position: 'absolute',
         left: wp('20%'),
-        top: hp('9%'),
+        top: hp('11%'),
     },
     idText:{
         color: '#ffffff',

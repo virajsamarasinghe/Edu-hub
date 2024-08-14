@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 
 const parentSchema = new mongoose.Schema({
-  studentID: String,
+  studentId: String,
   username: String,
   emailAddress: { type: String, unique: true },
   password: String,
+  phone: String,
+  profilePhoto: String,
   
   verificationCode: String,
   isVerified: { type: Boolean, default: false },

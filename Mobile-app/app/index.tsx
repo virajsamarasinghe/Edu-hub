@@ -6,51 +6,43 @@ import { useRouter } from 'expo-router';
 export default function StartPage() {
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const getData = async () => {
+  const checkLoginStatus = async () => {
     try {
-      const data = await AsyncStorage.getItem('isLoggedIN');
-      console.log(data, 'at StartPage');
-      if (data === 'true') {
-        setIsLoggedIn(true);
-        router.push('/home');
-      } else {
-        setIsLoggedIn(false);
-        router.push('/login');
+      // Check for student login
+      const studentLogin = await AsyncStorage.getItem('isLoggedIN');
+      if (studentLogin === 'true') {
+        setTimeout(() => {
+          router.push('/home');
+        }, 2000); // Add delay of 2 seconds
+        return;
       }
+
+      // Check for parent login
+      const parentLogin = await AsyncStorage.getItem('isLoggedINP');
+      if (parentLogin === 'true') {
+        setTimeout(() => {
+          router.push('/homeP');
+        }, 2000); // Add delay of 2 seconds
+        return;
+      }
+
+      // If no user is logged in, navigate to start
+      setTimeout(() => {
+        router.push('/start');
+      }, 2000); // Add delay of 2 seconds
     } catch (error) {
       console.error(error);
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const getDataP = async () => {
-    try {
-      const data = await AsyncStorage.getItem('isLoggedINP');
-      console.log(data, 'at StartPage');
-      if (data === 'true') {
-        setIsLoggedIn(true);
-        router.push('/homeP');
-      } else {
-        setIsLoggedIn(false);
-        router.push('/loginP');
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000); // Ensure the loading state is set to false after 2 seconds
     }
   };
 
   useEffect(() => {
-    getData();
-    getDataP();
+    checkLoginStatus();
   }, []);
-
-
-
 
   if (loading) {
     return (
@@ -59,7 +51,6 @@ export default function StartPage() {
       </View>
     );
   }
-
 
   return null;
 }

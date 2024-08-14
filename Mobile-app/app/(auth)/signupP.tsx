@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
-
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 const Signup = () => {
@@ -76,7 +76,7 @@ const Signup = () => {
     >
     <View style={styles.iconContainer}>
     <TouchableOpacity onPress={()=>router.back()}>
-      <Ionicons name="arrow-back-outline" size={28} style={styles.icon} color="white" />
+      <Ionicons name="arrow-back-outline" size={wp('7%')} style={styles.icon} color="white" />
     </TouchableOpacity>
     </View>
     <ScrollView style={styles.content} contentContainerStyle={styles.scrollContainer}>
@@ -84,7 +84,7 @@ const Signup = () => {
         <LottieView style={{flex:1}} source={require('../../assets/animation/3.json')} autoPlay loop/>
         </View>
     <View style={styles.container}>
-    <Text style={{fontSize:35, fontFamily:'outfit-bold', paddingBottom:10,textAlign:'center'}}>Create Your Account!!!</Text>
+    <Text style={{fontSize:hp('3.8%'), fontFamily: 'outfit-bold', paddingBottom:hp('3%'), paddingTop:-hp('1%'), textAlign: 'center'}}>Create Your Account!!!</Text>
       <Stack.Screen options={{ headerBackVisible: !pendingVerification }} />
       
 
@@ -92,7 +92,7 @@ const Signup = () => {
         <View>
 
           
-          <Text style={{padding:3}}>Student ID</Text>
+          <Text style={styles.label}>Student ID</Text>
             <TextInput
               autoCapitalize="none"
               value={studentId}
@@ -102,7 +102,7 @@ const Signup = () => {
               style={styles.inputField}
             />
           
-          <Text style={{padding:3}}>Username</Text>
+          <Text style={styles.label}>Username</Text>
             <TextInput
               autoCapitalize="none"
               value={username}
@@ -115,7 +115,7 @@ const Signup = () => {
           <Text style={styles.label}>Email</Text>
               <TextInput
                 autoCapitalize="none"
-                placeholder="simon@galaxies.dev"
+                placeholder="example@gmail.com"
                 placeholderTextColor="#ACACAA"
                 value={emailAddress}
                 onChangeText={setEmailAddress}
@@ -161,9 +161,9 @@ const Signup = () => {
             </TouchableOpacity>
           
 
-          <Pressable style={styles.button} onPress={handleCreateUser} >
+          <TouchableOpacity style={styles.button} onPress={handleCreateUser} >
           <Text style={styles.buttonText}>SignUp</Text>
-         </Pressable>
+         </TouchableOpacity>
         </View>
       
 
@@ -177,29 +177,28 @@ const Signup = () => {
 const styles = StyleSheet.create({
   content:{
     backgroundColor:'#8C78F0',
-    padding:5,
+    padding:wp('1%'),
 
   },
   container: {
     
     justifyContent: 'center',
     alignItems: 'center',
+    padding: wp('4%'),
+    paddingTop: -hp('3%'),
+    paddingBottom: hp('9%'),
     width: '100%',
-    height: 630,
-    backgroundColor: '#fff', 
-    borderWidth: 1, 
-    borderColor: '#ccc', 
-    borderRadius: 40, 
-    //borderBottomLeftRadius: 0, 
-    //borderBottomRightRadius: 0,
-    shadowColor: '#000000', // Shadow color
-    shadowOffset: { width: 0, height: 0 }, // Shadow offset
-    shadowOpacity: 0.2, // Shadow opacity
-    shadowRadius: 10, // Shadow radius
+    height: hp('78%'),
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: wp('10%'),
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
     elevation: 5,
-    marginTop:-120,
-    paddingTop:-20
-   
+    marginTop: -hp('13%'),
   
   },
 
@@ -210,33 +209,32 @@ const styles = StyleSheet.create({
   },
   
   inputField: {
-    marginVertical: 4,
-    width:300,
-    height: 50,
+    marginVertical:  hp('0.5%'),
+    height: hp('6%'),
+    width:wp('75%'),
     borderWidth: 1,
     borderColor: '#6c47ff',
     borderRadius: 15,
-    padding: 10,
+    padding: wp('3%'),
     backgroundColor: '#fff',
   },
   button: {
     backgroundColor: '#6c47ff',
-    padding: 12,
+    padding: hp('1.5%'),
     borderRadius: 99,
     alignItems: 'center',
-    marginTop: 16,
-    width:300,
-    height:46
+    marginTop: hp('2%'),
+    width: wp('75%'),
     
   },
   buttonText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize:  hp('2.3%'),
   },
   welcome:{
-    height:360,
-    marginTop:20 ,
-    width:355
+    height:hp('40%'),
+    marginTop: hp('2%'),
+    width: wp('100%')
     
   },
   picker: {
@@ -247,17 +245,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   dropdown: {
-    height: 50,
+    height: hp('6%'),
+    width:wp('75%'),
     borderWidth: 1,
     borderColor: '#6c47ff',
     borderRadius: 15,
-    padding:10,
-    width: 300,
-    marginVertical: 8,
+    padding: wp('3%'),
+    marginVertical:hp('1%'),
   },
   icon: {
-    marginRight: 5,
-    marginTop:5
+    marginRight: wp('2%'),
+    marginTop: hp('2.5%')
   },
   Label: {
     position: 'absolute',
@@ -269,13 +267,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   label: {
-    padding: 3
+    alignSelf: 'flex-start',
+    marginLeft: wp('2%'),
+    fontSize: hp('1.6%'),
+    color: 'rgba(75, 85, 99, 1)',
+    marginBottom: hp('0.4%'),
   },
   placeholderStyle: {
-    fontSize: 16,
+    fontSize: hp('2%'),
   },
   selectedTextStyle: {
-    fontSize: 16,
+    fontSize: hp('2%'),
   },
   iconStyle: {
     width: 20,
@@ -287,18 +289,18 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: 999,
     paddingTop: Platform.OS === 'ios' ? 45 : 15, // Adjust as per your design
-    paddingHorizontal: 15,
+    paddingHorizontal: wp('3%'),
     backgroundColor: 'rgba(0, 0, 0, 0)', // Same background as content
   },
   eyeIcon1: {
     position: 'absolute',
-    right: 8,
-    top:285
+    right: wp('3%'),
+    top:hp('33.3%')
   },
   eyeIcon2: {
     position: 'absolute',
-    right: 8,
-    top:365
+    right: wp('3%'),
+    top:hp('43%')
   },
 });
 
