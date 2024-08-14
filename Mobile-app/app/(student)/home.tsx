@@ -4,13 +4,16 @@ import { Ionicons } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import axios from 'axios';
 import React, { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect,useNavigation  } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+//import QR from '../../HomeStudentComponents/QR'
 
 export default function Home() {
     const [firstName, setFirstName] = useState('');
-
+    const navigation = useNavigation();
+    const router = useRouter();
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
@@ -53,6 +56,9 @@ export default function Home() {
         fetchPhoneFromDatabase();
       }, []);
 
+      const handlePress = () => {
+        router.push('/QR'); // Navigate to the /reset route
+      };
 
 
       
@@ -64,11 +70,9 @@ export default function Home() {
         >
             <TouchableOpacity style={styles.iconContainerm}>
                 <Ionicons name="notifications-outline" size={30} color="#ffffff"  />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.iconContainerb}>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.iconContainerb} onPress={handlePress} >
                 <AntDesign name="qrcode" size={30} color="#ffffff" />
-
-
             </TouchableOpacity>
 
             <Text style={styles.hellovirajText}>Hello {firstName},</Text>

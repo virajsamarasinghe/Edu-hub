@@ -251,5 +251,22 @@ router.post("/register", [
       }
     });
 
+    router.get('/get-qr-code', async (req, res) => {
+        const { studentId } = req.query;
+    
+        try {
+            const user = await User.findOne({ studentId });
+            if (!user) {
+                return res.status(404).send({ error: 'User not found' });
+            }
+    
+            res.status(200).send({ qrCode: user.qrCode });
+        } catch (error) {
+            console.error('Error fetching QR code:', error);
+            res.status(500).send({ error: error.message });
+        }
+    });
+    
+
     module.exports = router;
   
