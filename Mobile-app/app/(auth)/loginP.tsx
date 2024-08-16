@@ -37,7 +37,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/loginP', {
+      const response = await axios.post('http://192.168.8.144/loginP', {
         emailAddress,
         password
       });
@@ -46,7 +46,7 @@ const Login = () => {
 
       await AsyncStorage.setItem('userP',emailAddress);
 
-      const userDataResponseP = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+      const userDataResponseP = await axios.get('http://192.168.8.144/get-user-dataP', {
         params: { emailAddress}
       });
 

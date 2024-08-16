@@ -1,31 +1,10 @@
 import React from 'react'
-import useAuth from '../../hooks/useAuth';
+
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 
 const Order = () => {
 
-  const { user } = useAuth();
-  // console.log(user.email)
-  const token = localStorage.getItem('access-token')
-
-  const { refetch, data: orders = [] } = useQuery({
-      queryKey: ['orders', user?.email],
-      queryFn: async () => {
-          const res = await fetch(`http://localhost:6001/payments?email=${user?.email}`, {
-              headers: {
-                  authorization: `Bearer ${token}`
-              }
-          })
-          return res.json();
-      },
-  })
-
-  //console.log(orders)
-  const formatDate = (createdAt) => {
-    const createdAtDate = new Date(createdAt)
-    return createdAtDate.toLocaleDateString()
-  }
 
   return (
     <div className="max-w-screen-2xl container mx-auto xl:px-24 px-4">

@@ -1,7 +1,11 @@
 import React from 'react';
+import Navbar from '../../components/Navbar';
+import Footer from '../../components/Footer';
 
 const BlogPage = () => {
   return (
+    <div>
+      <Navbar />
     <div className='section-container bg-white relative w-full h-160' style={{ maxWidth: 'auto', margin: '0 auto' }}>
       <div className='py-24 flex flex-col md:flex-row justify-between items-start gap-8 relative'>
         
@@ -17,6 +21,8 @@ const BlogPage = () => {
         </div> 
         
       </div>
+    </div>
+    <Footer />
     </div>
   );
 };
