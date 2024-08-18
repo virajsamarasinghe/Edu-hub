@@ -42,7 +42,25 @@ const sendStudentIdEmail = (email, studentId) => {
   });
 };
 
+const sendEmailReceipt = (email, subject, text) => {
+  const mailOptions = {
+      from: 'your-email@gmail.com',
+      to: email,
+      subject: subject,
+      text: text
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+          console.error('Error sending email:', error);
+      } else {
+          console.log('Email sent:', info.response);
+      }
+  });
+};
+
 module.exports = {
   sendVerificationCode,
   sendStudentIdEmail,
+  sendEmailReceipt,
 };

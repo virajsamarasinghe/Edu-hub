@@ -10,7 +10,9 @@
     "mongoose": "^8.5.1",
     "nodemailer": "^6.9.14",
     "nodemon": "^3.1.4",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "stripe": "^16.7.0",
+    "twilio": "^5.2.2"
   },
   "name": "backend",
   "version": "1.0.0",
