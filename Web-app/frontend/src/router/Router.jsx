@@ -17,6 +17,7 @@ import BlogPage from "../pages/extrapages/Blog";
 import CustomizeDesign from "../pages/extrapages/CustomizeDesign"; 
 import OnlineOrder from "../pages/extrapages/OnlineOrder";
 import CustomerSupport from "../pages/extrapages/CustomerSupport";
+import VerifyEmail from "../components/VerifyEmail";
 
 
 const router = createBrowserRouter([
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/menu",
     element: <Menu />,
+  },
+  {
+    path: "/verify-email",
+    element: <VerifyEmail />,
   },
 
  

@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+require('dotenv').config();
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -8,12 +9,20 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendVerificationCode = (email, code) => {
+// Function to send verification code and link
+const sendVerificationCode = (email, code, token) => {
+  const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${token}`;
+
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: 'Email Verification Code',
-    text: `Your verification code is: ${code}`,
+    subject: 'Email Verification',
+    text: `Your verification code is: ${code}\n\nYou can also verify your email by clicking on the following link:\n${verificationLink}`,
+    html: `
+      <p>Your verification code is: <strong>${code}</strong></p>
+      <p>You can also verify your email by clicking on the following link:</p>
+      <a >${verificationLink }</a>
+    `,
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
@@ -25,6 +34,7 @@ const sendVerificationCode = (email, code) => {
   });
 };
 
+// Function to send student ID email
 const sendStudentIdEmail = (email, studentId) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,

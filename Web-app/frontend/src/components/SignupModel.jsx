@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+;
 
 const SignupModal = ({ isOpen, onClose }) => {
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -36,7 +37,7 @@ const SignupModal = ({ isOpen, onClose }) => {
       console.log('Registration successful:', response.data);
       alert('Registration successful! Please check your email for verification.');
       setPendingVerification(true);
-      navigate('/verify', { state: { email: emailAddress } });
+      navigate('/', { state: { email: emailAddress } });
     } catch (error) {
       setLoading(false);
       alert('Failed to register. Please try again.');
