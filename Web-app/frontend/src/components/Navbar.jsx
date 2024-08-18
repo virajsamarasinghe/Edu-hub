@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import logo from "/logo.png";
 import { FaRegUser } from "react-icons/fa";
-import Modal from "./Modal";
+
 import Profile from "./Profile";
 import { Link } from "react-router-dom";
-import useCart from "../hooks/useCart";
+
 import useAuth from "../hooks/useAuth";
 
 const Navbar = () => {
@@ -13,7 +13,7 @@ const Navbar = () => {
   const [showSearchInput, setShowSearchInput] = useState(false);
   const [lastScrollTop, setLastScrollTop] = useState(0);
   const { user } = useAuth();
-  const [cart] = useCart();
+
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -47,16 +47,12 @@ const Navbar = () => {
     setShowSearchInput(true); // Show search input when navigating
   };
 
-  useEffect(() => {
-    if (location.pathname !== "/menu") {
-      setShowSearchInput(false); // Hide search input if not on /menu page
-    }
-  }, [location.pathname]);
+
 
   const navItems = (
     <>
       <li>
-        <a href="/" className="text-pink">
+        <a href="/home" className="text-pink">
           Home
         </a>
       </li>
@@ -130,14 +126,7 @@ const Navbar = () => {
         </div>
         <div className="navbar-end">
          
-          {/* Conditionally render search input only on /menu page */}
-          {showSearchInput && location.pathname === "/menu" && (
-            <input
-              type="text"
-              placeholder="Search..."
-              className="input input-bordered w-full max-w-xs"
-            />
-          )}
+          
           {/* shopping cart */}
           
           <Link to="/cart-page">
@@ -160,7 +149,7 @@ const Navbar = () => {
             d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
         </svg>
                 <span className="badge badge-sm indicator-item bg-red text-white">
-                  {cart.length || 0}
+                  {0}
                 </span>
               </div>
             </label>
@@ -187,24 +176,17 @@ const Navbar = () => {
       />
     </svg>
     <span className="badge badge-sm indicator-item bg-red text-white absolute bottom-3 left-2">
-      {cart.length || 0}
+      {0}
     </span>
   </div>
 </button>
           {/* login button */}
-          {user ? (
-            <>
+          
               <Profile user={user} />
-            </>
-          ) : (
-            <button
-              onClick={() => document.getElementById('my_modal_5').showModal()}
-              className="btn flex items-center gap-2 rounded-full px-6 bg-pink text-white"
-            >
-              <FaRegUser /> Login
-            </button>
-          )}
-          <Modal />
+           
+        
+         
+      
         </div>
       </div>
     </header>

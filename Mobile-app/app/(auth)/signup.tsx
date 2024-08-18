@@ -67,7 +67,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.142:5001/register', {
+      const response = await axios.post('http://192.168.8.144:5001/register', {
         firstName,
         lastName,
         emailAddress,
@@ -319,12 +319,12 @@ const styles = StyleSheet.create({
   eyeIcon1: {
     position: 'absolute',
     right: wp('3%'),
-    top:hp('40.9%')
+    top:hp('39.3%')
   },
   eyeIcon2: {
     position: 'absolute',
     right: wp('3%'),
-    top:hp('50.2%')
+    top:hp('48.2%')
   },
 });
 

@@ -1,63 +1,65 @@
-import React, { useContext } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaFacebookF, FaGithub, FaGoogle } from "react-icons/fa";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../contexts/AuthProvider";
+import { useNavigate } from "react-router-dom";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 
+
 const Signup = () => {
-  const { signUpWithGmail, createUser, updateUserProfile } =
-    useContext(AuthContext);
-  const axiosPublic = useAxiosPublic();
-
+  const { register, handleSubmit, formState: { errors } } = useForm();
+  const [loading, setLoading] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
+  const axios = useAxiosPublic();
 
-  const from = location.state?.from?.pathname || "/";
+  const onSubmit = async (data) => {
+    const { firstName, lastName, emailAddress, password, confirmPassword, userType } = data;
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+    if (!userType) {
+      alert('Please select your user type (Student, Tutor, or Parent)');
+      return;
+    }
 
-  const onSubmit = (data) => {
-    const email = data.email;
-    const password = data.password;
-    createUser(email, password)
-      .then((result) => {
-        const user = result.user;
-        updateUserProfile(data.email, data.photoURL).then(() => {
-          const userInfor = {
-            name: data.name,
-            email: data.email,
-          };
-          axiosPublic.post("/users", userInfor).then((response) => {
-            alert("Signin successful!");
-            navigate(from, { replace: true });
-          });
-        });
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+    if (!emailAddress || !password || !confirmPassword || !firstName || !lastName) {
+      alert('Please fill in all required fields');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.144:5001/register', {
+        firstName,
+        lastName,
+        emailAddress,
+        password,
+        userType
       });
+      setLoading(false);
+      console.log('Registration successful:', response.data);
+      alert('Registration successful! Please check your email for verification.');
+      setPendingVerification(true);
+      navigate('/verify', { state: { email: emailAddress } });
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to register. Please try again.');
+    }
   };
 
-  const handleRegister = () => {
-    signUpWithGmail()
-      .then((result) => {
-        const user = result.user;
-        const userInfor = {
-          name: result?.user?.displayName,
-          email: result?.user?.email,
-        };
-        axiosPublic.post("/users", userInfor).then((response) => {
-          alert("Signin successful!");
-          navigate("/");
-        });
-      })
-      .catch((error) => console.log(error));
+  const handleDropdownChange = (event) => {
+    const selectedIndex = event.target.selectedIndex;
+    const selectedOption = event.target.options[selectedIndex];
+    const selectedItem = {
+      label: selectedOption.text,
+      value: selectedOption.value
+    };
+
+    if (selectedItem.value === '2') {
+      navigate('signupP');
+    }
   };
 
   return (
@@ -65,74 +67,95 @@ const Signup = () => {
       <div className="max-w-md bg-white shadow w-full mx-auto flex items-center justify-center my-20 rounded-3xl">
         <div className="mb-5">
           <form className="card-body" onSubmit={handleSubmit(onSubmit)}>
-            <h3 className="font-bold text-lg">Please Create An Account!</h3>
+            <h3 className="font-bold text-3xl">Hi!, Please Signup</h3>
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Name</span>
+                <span className="label-text">User Type</span>
+              </label>
+              <select
+                {...register("userType", { required: true })}
+                className="input input-bordered w-full"
+                onChange={handleDropdownChange}
+              >
+                <option value="">Select User Type</option>
+                <option value="1">Student</option>
+                <option value="2">Tutor</option>
+                <option value="3">Parent</option>
+              </select>
+              {errors.userType && <p className="text-red-500 text-sm">Please select your user type.</p>}
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">First Name</span>
               </label>
               <input
-                type="name"
+                type="text"
                 placeholder="Your name"
-                className="input input-bordered"
-                {...register("name")}
+                {...register("firstName", { required: true })}
+                className="input input-bordered w-full"
               />
+              {errors.firstName && <p className="text-red-500 text-sm">First name is required.</p>}
             </div>
+
             <div className="form-control">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text">Last Name</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Your last name"
+                {...register("lastName", { required: true })}
+                className="input input-bordered w-full"
+              />
+              {errors.lastName && <p className="text-red-500 text-sm">Last name is required.</p>}
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text">Email Address</span>
               </label>
               <input
                 type="email"
-                placeholder="email"
-                className="input input-bordered"
-                {...register("email")}
+                placeholder="Your email address"
+                {...register("emailAddress", { required: true })}
+                className="input input-bordered w-full"
               />
+              {errors.emailAddress && <p className="text-red-500 text-sm">Email address is required.</p>}
             </div>
+
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Password</span>
               </label>
               <input
                 type="password"
-                placeholder="password"
-                className="input input-bordered"
-                {...register("password")}
+                placeholder="Your password"
+                {...register("password", { required: true })}
+                className="input input-bordered w-full"
               />
+              {errors.password && <p className="text-red-500 text-sm">Password is required.</p>}
+            </div>
+
+            <div className="form-control">
               <label className="label">
-                <a href="#" className="label-text-alt link link-hover mt-2">
-                  Forgot password?
-                </a>
+                <span className="label-text">Confirm Password</span>
               </label>
-            </div>
-            <p>{errors.message}</p>
-            <div className="form-control mt-6">
               <input
-                type="submit"
-                className="btn bg-pink text-white"
-                value="Sign up"
+                type="password"
+                placeholder="Confirm your password"
+                {...register("confirmPassword", { required: true })}
+                className="input input-bordered w-full"
               />
+              {errors.confirmPassword && <p className="text-red-500 text-sm">Confirm password is required.</p>}
             </div>
-            <div className="text-center my-2">
-              Have an account?
-              <Link to="/login">
-                <button className="ml-2 underline">Login here</button>
-              </Link>
+
+            <div className="form-control mt-6">
+              <button type="submit" className="btn btn-primary" disabled={loading}>
+                {loading ? 'Signing up...' : 'Signup'}
+              </button>
             </div>
           </form>
-          <div className="text-center space-x-3">
-            <button
-              onClick={handleRegister}
-              className="btn btn-circle hover:bg-pink hover:text-white"
-            >
-              <FaGoogle />
-            </button>
-            <button className="btn btn-circle hover:bg-pink hover:text-white">
-              <FaFacebookF />
-            </button>
-            <button className="btn btn-circle hover:bg-pink hover:text-white">
-              <FaGithub />
-            </button>
-          </div>
         </div>
       </div>
     </div>
