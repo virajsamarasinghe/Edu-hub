@@ -3,16 +3,21 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import axios from 'axios';
+import { useRouter } from 'expo-router';
 import React, { useState, useCallback, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect ,useNavigation} from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
 
 export default function Home() {
+    
+    
 
     const [username, setUsername] = useState('');
+    const navigation = useNavigation();
+    const router = useRouter();
 
     useFocusEffect(
         useCallback(() => {
@@ -37,7 +42,7 @@ export default function Home() {
             }
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://172.20.10.3:5001/get-user-dataP', {
+            const response = await axios.get('http://192.168.8.144:5001/get-user-dataP', {
                 params: { emailAddress }
               });
 
@@ -55,6 +60,20 @@ export default function Home() {
       
         fetchPhoneFromDatabase();
       }, []);
+      const handleAttendancePress = () => {
+        router.push('/attendance'); // Navigate to the /attendance route
+      };
+      
+      const handleProgressPress = () => {
+        router.push('/progress'); // Navigate to the /progress route
+      };
+      const handleContactPress = () => {
+        router.push('/contact'); // Navigate to the /progress route
+      };
+      const handleAdvicesPress = () => {
+        router.push('/advices'); // Navigate to the /progress route
+      };
+
 
     return (
         <LinearGradient
@@ -70,24 +89,24 @@ export default function Home() {
 
 
             </TouchableOpacity>
-            <TouchableOpacity style={styles.box1}>
-                <Image source={require('./../../assets/icon/attendance.png')} style={styles.quizImage} />
-                <Text style={styles.quizText}>Attendance</Text>
-                <Text style={styles.quiznoteText}>Attendance of your child </Text>
-            </TouchableOpacity>
+            <TouchableOpacity style={styles.box1} onPress={handleAttendancePress}>
+    <Image source={require('./../../assets/icon/attendance.png')} style={styles.quizImage} />
+    <Text style={styles.quizText}>Attendance</Text>
+    <Text style={styles.quiznoteText}>Attendance of your child </Text>
+</TouchableOpacity>
 
-            <TouchableOpacity style={styles.box2} >
+            <TouchableOpacity style={styles.box2} onPress={handleProgressPress}>
             <Image source={require('./../../assets/icon/progress.png')} style={styles.resourcesImage} />
                 <Text style={styles.resourcesText}>Progress</Text>
                 <Text style={styles.resourcenoteText}> progress of your child{'\n'}  according to his marks</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.box3} >
+            <TouchableOpacity style={styles.box3} onPress={handleContactPress}>
             <Image source={require('./../../assets/icon/contact.png')} style={styles.progressImage} />
                 <Text style={styles.progressText}>Contact</Text>
                 <Text style={styles.progressnoteText}>You can contact tutor or institute
                 </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.box4} >
+            <TouchableOpacity style={styles.box4} onPress={handleAdvicesPress}>
             <Image source={require('./../../assets/icon/chat.png')} style={styles.chatImage} />
                 <Text style={styles.chatText}>Tutor’s
                 Advices</Text>

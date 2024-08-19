@@ -64,7 +64,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://172.20.10.3:5001/phoneP', {
+          const response = await axios.post('http://192.168.8.144:5001/phoneP', {
             emailAddress,
             phone,
           });
@@ -95,7 +95,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://172.20.10.3:5001/username', {
+          const response = await axios.post('http://192.168.8.144:5001/username', {
             emailAddress,
             username,
           });

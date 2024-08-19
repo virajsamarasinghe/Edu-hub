@@ -4,6 +4,9 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
+
+
+
 export default function TabLayout() {
     return (
         <Tabs screenOptions={{
@@ -48,5 +51,6 @@ export default function TabLayout() {
                 }}
             />
         </Tabs>
+        
     );
 }

@@ -8,6 +8,7 @@ require('../models/ParentDetails');
 const Parent = mongoose.model('Parents');
 
 require('../models/StudentDetails');
+const Attendance = require('../models/attendance');
 const User = mongoose.model('Students');
 
 const router = express.Router();
@@ -133,7 +134,49 @@ router.post("/registerP", [
         res.status(500).send({ status: "error", data: error.message });
       }
     });
+    
 
+    router.post('/save-attendance', async (req, res) => {
+      const { date, studentId, attendanceStatus } = req.body;
+    
+      try {
+        // No need to convert studentId to ObjectId since it's a string
+        const attendanceRecord = new Attendance({
+          date,
+          studentId, // Use studentId as a string
+          attendanceStatus
+        });
+    
+        const savedRecord = await attendanceRecord.save();
+        res.status(201).json({ message: 'Attendance record saved successfully', savedRecord });
+      } catch (error) {
+        console.error('Error saving attendance record:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    });
+     router.post('/check-attendance', async (req, res) => {
+      const { studentId } = req.body; // Use req.body to get studentId from the request body
+    
+      try {
+        const attendanceRecords = await Attendance.find({ studentId });
+    
+        if (!attendanceRecords.length) {
+          return res.status(404).json({ message: 'No attendance records found for this student' });
+        }
+    
+        // Extract dates from attendance records
+        const attendanceDates = attendanceRecords.map(record => ({
+          
+          attendanceStatus: record.attendanceStatus,
+          date: record.date,
+        }));
+    
+        res.status(200).json({  attendanceDates });
+      } catch (error) {
+        console.error('Error fetching attendance records:', error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+    });
 
     router.post('/reset-passwordP', async (req, res) => {
       const { emailAddress, oldPassword, newPassword, confirmPassword } = req.body;
@@ -180,6 +223,8 @@ router.post("/registerP", [
         res.status(500).json({ message: 'Internal server error' });
       }
     });
+    
+    
 
     router.post('/username', async (req, res) => {
       const { emailAddress, username } = req.body;
@@ -210,6 +255,7 @@ router.post("/registerP", [
         res.json({
           status: 'ok',
           data: {
+            studentId:user.studentId,
             username: user.username,
             verificationCode: user.verificationCode,
             phone: user.phone,
