@@ -28,6 +28,7 @@
     "@stripe/stripe-react-native": "^0.38.4",
     "axios": "^1.7.2",
     "expo": "~51.0.20",
+    "expo-barcode-scanner": "~13.0.1",
     "expo-constants": "~16.0.2",
     "expo-font": "~12.0.8",
     "expo-image-picker": "~15.0.7",
@@ -47,6 +48,7 @@
     "react-native-calendars": "^1.1306.0",
     "react-native-chart-kit": "^6.12.0",
     "react-native-datepicker": "^1.7.2",
+    "react-native-dotenv": "^3.4.11",
     "react-native-element-dropdown": "^2.12.1",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-image-crop-picker": "^0.41.2",
@@ -60,8 +62,7 @@
     "react-native-svg": "^15.5.0",
     "react-native-swiper": "^1.6.0",
     "react-native-web": "~0.19.10",
-    "uuid": "^10.0.0",
-    "expo-barcode-scanner": "~13.0.1"
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

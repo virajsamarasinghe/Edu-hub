@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-
+import config from '../../config'
 
 const Signup = () => {
 
@@ -46,7 +46,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/registerP', {
+      const response = await axios.post(`${config.API_URL}/registerP`, {
         studentId,
         username,
         emailAddress,

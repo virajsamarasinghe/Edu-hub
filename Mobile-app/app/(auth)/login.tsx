@@ -10,6 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import config from '../../config'
 
 interface DropdownItem {
   label: string;
@@ -73,7 +74,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/login', {
+      const response = await axios.post(`${config.API_URL}/login`, {
         studentId,
         password
       });
@@ -83,7 +84,7 @@ const Login = () => {
       //const studId = response.data.studentId;
       await AsyncStorage.setItem('userId', studentId);
 
-      const userDataResponse = await axios.get('http://192.168.8.144:5001/get-user-data', {
+      const userDataResponse = await axios.get(`${config.API_URL}/get-user-data`, {
         params: { studentId }
       });
 

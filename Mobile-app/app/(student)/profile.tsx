@@ -10,6 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import config from '../../config'
 
 
 
@@ -64,7 +65,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.144:5001/phone', {
+          const response = await axios.post(`${config.API_URL}/phone`, {
             studentId,
             phone,
           });
@@ -95,7 +96,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.144:5001/firstname', {
+          const response = await axios.post(`${config.API_URL}/firstname`, {
             studentId,
             firstName,
           });
@@ -126,7 +127,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.144:5001/lastname', {
+          const response = await axios.post(`${config.API_URL}/lastname`, {
             studentId,
             lastName,
           });
@@ -160,7 +161,7 @@ export default function Profile() {
             
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.144:5001/get-user-data', {
+            const response = await axios.get(`${config.API_URL}/get-user-data`, {
                 params: { studentId }
               });
 
