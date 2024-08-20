@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import config from '../../config'
 
 export default function QRCodePage() {
     const router = useRouter();
@@ -20,7 +21,7 @@ export default function QRCodePage() {
                     return;
                 }
 
-                const response = await axios.get('http://192.168.8.144:5001/get-qr-code', {
+                const response = await axios.get(`${config.API_URL}/get-qr-code`, {
                     params: { studentId }
                 });
 

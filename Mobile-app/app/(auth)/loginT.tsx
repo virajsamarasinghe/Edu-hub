@@ -1,17 +1,72 @@
 
 import { Link } from 'expo-router';
-import React, { useState } from 'react';
-import { View, StyleSheet, TextInput, Button, Pressable, Text, Alert,KeyboardAvoidingView, ScrollView ,Platform,TouchableOpacity} from 'react-native';
+import React, { useState, useCallback, useEffect } from 'react';
+import { TouchableOpacity,View, StyleSheet, TextInput, Button, Pressable, Text, Alert,KeyboardAvoidingView, ScrollView ,Platform} from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import { Ionicons } from '@expo/vector-icons';
 import {useRouter} from 'expo-router';
+import axios from 'axios';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import config from '../../config'
 
 
 const Login = () => {
 
   const router =useRouter();
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Reset state when screen is focused
+     
+      setEmailAddress('');
+      setPassword('');
+
+    }, [])
+  );
+
+  const handleLogin = async () => {
+  if (!emailAddress || !password) {
+    alert('Please fill in both fields');
+    return;
+  }
+
+  try {
+    setLoading(true);
+    const response = await axios.post(`${config.API_URL}/loginT`, {
+      emailAddress,
+      password
+    });
+    setLoading(false);
+    console.log('Login successful:', response.data);
+
+    await AsyncStorage.setItem('userP',emailAddress);
+
+    // const userDataResponseP = await axios.get(`${config.API_URL}/get-user-dataT`, {
+    //   params: { emailAddress}
+    // });
+
+    // const { usernameT, phoneT } = userDataResponseP.data.data;
+    // await AsyncStorage.setItem('usernameT', usernameT);
+   
+    // await AsyncStorage.setItem('phoneT', phoneT);
+
+    // await AsyncStorage.setItem('isLoggedINT', 'true');
+
+    //alert('Login successful');
+    // Navigate to the home screen or another screen after successful login
+     router.push('/homeT');
+  } catch (error) {
+    setLoading(false);
+    alert('Failed to login. Please check your student ID and password.');
+  }
+}
 
 
   
@@ -39,14 +94,39 @@ const Login = () => {
       <Text style={{fontSize:hp('4%'), fontFamily:'outfit-bold', paddingBottom:hp('5%'),textAlign:'center'}}>Hi!, Please Login</Text>
      
     
+     
       <Text style={styles.label}>Email</Text>
-      <TextInput  autoCapitalize="none" placeholder="example@gmail.com" placeholderTextColor="#ACACAA" style={styles.inputField} />
+      <TextInput
+            autoCapitalize="none"
+            placeholder="Email Address"
+            placeholderTextColor="#ACACAA"
+            value={emailAddress}
+            onChangeText={setEmailAddress}
+            style={styles.inputField}
+          />
       <Text  style={styles.label}>Password</Text>
-      <TextInput placeholder="password" placeholderTextColor="#ACACAA" secureTextEntry style={styles.inputField} />
+      <TextInput
+            placeholder="Enter your password"
+            placeholderTextColor="#ACACAA"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            style={styles.inputField}
+          />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon}
+            >
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
       
 
 
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
 
@@ -139,6 +219,12 @@ const styles = StyleSheet.create({
   icon: {
     marginRight: wp('2%'),
     marginTop: hp('2.5%')
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: wp('13%'),
+    top:hp('29%')
+    
   },
 
   placeholderStyle: {

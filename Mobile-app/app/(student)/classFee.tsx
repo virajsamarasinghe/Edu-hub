@@ -10,6 +10,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CardField, useStripe, StripeProvider,initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
 import LottieView from 'lottie-react-native';
+import config from '../../config'
 
 const PUBLISHABLE_KEY = 'pk_test_51PoAoaB44XaxZNEmJa6hDXjhrpMaOjwPTOyG1pikZkG7tNOX73LOoparv94l0QelNzz36xunrhh0PUkv8H5EefkU00rgq5dkaG'; // Replace with your actual publishable key
 
@@ -64,7 +65,7 @@ export default function Home() {
             let anyPaid = false;
     
             for (const item of data) {
-                const response = await axios.get('http://192.168.8.142:5001/status', {
+                const response = await axios.get(`${config.API_URL}/status`, {
                     params: {
                         studentID: studentId,
                         year: currentYear,
@@ -133,7 +134,7 @@ export default function Home() {
         const amount = paymentAmounts[value || ''] || 0;
     
         try {
-            const response = await axios.post('http://192.168.8.142:5001/create-payment-intent', {
+            const response = await axios.post(`${config.API_URL}/create-payment-intent`, {
                 amount,
             });
     
@@ -150,7 +151,7 @@ export default function Home() {
                 const studentId = await AsyncStorage.getItem('userId');
                 if (!studentId) return;
     
-                const updateResponse = await axios.post('http://192.168.8.142:5001/make', {
+                const updateResponse = await axios.post(`${config.API_URL}/make`, {
                     studentID: studentId,
                     year: currentYear,
                     month: currentMonth,

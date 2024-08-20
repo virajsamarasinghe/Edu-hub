@@ -10,6 +10,7 @@ import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import config from '../../config'
 
 const Login = () => {
 
@@ -37,7 +38,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/loginP', {
+      const response = await axios.post(`${config.API_URL}/loginP`, {
         emailAddress,
         password
       });
@@ -46,7 +47,7 @@ const Login = () => {
 
       await AsyncStorage.setItem('userP',emailAddress);
 
-      const userDataResponseP = await axios.get('http://192.168.8.144:5001/get-user-dataP', {
+      const userDataResponseP = await axios.get(`${config.API_URL}/get-user-dataP`, {
         params: { emailAddress}
       });
 

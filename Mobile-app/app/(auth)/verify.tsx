@@ -5,6 +5,7 @@ import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
+import config from '../../config'
 
 const Verify = () => {
   const router = useRouter();
@@ -27,7 +28,7 @@ const Verify = () => {
 
     
 
-      const response = await axios.post('http://192.168.8.144:5001/verify-email', { code });
+      const response = await axios.post(`${config.API_URL}/verify-email`, { code });
 
       if (response.data.status === 'success') {
         alert('Email verified successfully!');
@@ -44,7 +45,7 @@ const Verify = () => {
 
   const handleResendCode = async () => {
     try {
-      await axios.post('http://192.168.8.144:5001/resend-verification-code', { email });
+      await axios.post(`${config.API_URL}/resend-verification-code`, { email });
       setCountdown(60); // Reset the countdown timer
       setIsResendDisabled(true);
       alert('Verification code resent. Please check your email.');
