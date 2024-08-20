@@ -15,6 +15,8 @@ app.use(cors());
 app.use( require('./routes/studentRoutes'));
 app.use( require('./routes/parentRoutes'));
 app.use( require('./routes/payment'));
+app.use( require('./routes/TutorRoutes'))
+
 
 const PORT = process.env.PORT || 5001;
 
