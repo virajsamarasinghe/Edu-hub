@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
   eyeIcon: {
     position: 'absolute',
     right: wp('13%'),
-    top:hp('29%')
+    top:hp('31%')
     
   },
 

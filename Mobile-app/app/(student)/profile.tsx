@@ -203,6 +203,10 @@ export default function Profile() {
       router.push('/reset'); // Navigate to the /reset route
     };
 
+    const handlePressQR = () => {
+      router.push('/QR'); // Navigate to the /reset route
+    };
+
     const toggleEditFirstName = () => setIsEditingFirstName(!isEditingFirstName);
     const toggleEditLastName = () => setIsEditingLastName(!isEditingLastName);
     const toggleEditEmail = () => setIsEditingEmail(!isEditingEmail);
@@ -218,7 +222,7 @@ export default function Profile() {
             <TouchableOpacity style={styles.iconContainerm}>
                 <Ionicons name="notifications-outline" size={30} color="#ffffff"  />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconContainerb}>
+            <TouchableOpacity style={styles.iconContainerb} onPress={handlePressQR}>
             <AntDesign name="qrcode" size={30} color="#ffffff" />
             </TouchableOpacity>
 

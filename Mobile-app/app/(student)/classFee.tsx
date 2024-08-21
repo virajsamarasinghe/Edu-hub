@@ -189,6 +189,8 @@ export default function Home() {
 
                 <Text style={styles.textpay}>Payment</Text>
 
+                <View style={styles.content}>
+
                 <View style={styles.box1}>
                     <Text style={styles.Text1}>Payment Status</Text>
                     <Text style={styles.TextYear}> {currentYear}</Text>
@@ -238,6 +240,7 @@ export default function Home() {
         );
     })}
     </ScrollView>
+</View>
 </View>
 
 
@@ -308,6 +311,26 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    content: {
+        marginTop:hp('40%'),
+        paddingTop:-hp('3%'),
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: wp('15%'),
+        //paddingBottom: 40,
+        width: '100%',
+        height: hp('66%'),	
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: wp('10%'),
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 0 },
+        shadowOpacity: 0.2,
+        shadowRadius: 10,
+        elevation: 5,
+        
+      },
   
     iconContainerm: {
         flexDirection: 'row',
@@ -330,7 +353,7 @@ const styles = StyleSheet.create({
         width: hp('42%'),
         height: hp('26%'),
         backgroundColor: '#ffffff',
-        top: hp('17%'),
+        top: hp('2%'),
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -347,7 +370,7 @@ const styles = StyleSheet.create({
         width: hp('42%'),
         height: hp('35%'),
         backgroundColor: '#ffffff',
-        top: hp('45%'),
+        top: hp('30%'),
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
