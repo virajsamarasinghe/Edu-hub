@@ -9,7 +9,7 @@ import { useRouter } from 'expo-router';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import config from '../../config'
+
 
 interface DropdownItem {
   label: string;
@@ -68,7 +68,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(`${config.API_URL}/register`, {
+      const response = await axios.post('http://192.168.8.144:5001/register', {
         firstName,
         lastName,
         emailAddress,
