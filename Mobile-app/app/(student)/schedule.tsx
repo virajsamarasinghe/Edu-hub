@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import config from '../../config'
+
 
 
 export default function Home() {

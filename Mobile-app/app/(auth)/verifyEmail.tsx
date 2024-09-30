@@ -5,7 +5,7 @@ import LottieView from 'lottie-react-native';
 import axios from 'axios';
 import { useFocusEffect } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import config from '../../config'
+
 
 const Verify = () => {
   const router = useRouter();
@@ -20,7 +20,7 @@ const Verify = () => {
 
     
 
-      const response = await axios.post(`${config.API_URL}/sendcode`, 
+      const response = await axios.post('http://192.168.8.144:5001/sendcode', 
         {emailAddress},
       );
 

@@ -8,7 +8,7 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useFocusEffect,useNavigation  } from '@react-navigation/native';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import config from '../../config'
+
 
 
 export default function Home() {
@@ -38,7 +38,7 @@ export default function Home() {
             }
       
             // Fetch the latest phone number from the database
-            const response = await axios.get(`${config.API_URL}/get-user-data`, {
+            const response = await axios.get('http://192.168.8.144:5001/get-user-data', {
                 params: { studentId }
               });
 

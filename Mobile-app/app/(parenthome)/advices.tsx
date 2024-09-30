@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
 import axios from 'axios';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import config from '../../config'
+
 
 const Advices: React.FC = () => {
   const [studentId, setStudentId] = useState('');
@@ -39,7 +39,7 @@ const Advices: React.FC = () => {
     }
 
     try {
-      const response = await axios.post(`${config.API_URL}/save-attendance`, {
+      const response = await axios.post('http://192.168.8.144:5001/save-attendance', {
         date,
         studentId,
         attendanceStatus,
