@@ -4,7 +4,7 @@ import { useRouter, useLocalSearchParams } from 'expo-router';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import config from '../../config'
+
 
 import LottieView from 'lottie-react-native';
 
@@ -39,7 +39,7 @@ const ResetPassword = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(`${config.API_URL}/reset-password`, {
+      const response = await axios.post('http://192.168.8.144:5001/reset-password', {
         emailAddress,
         oldPassword,
         newPassword,

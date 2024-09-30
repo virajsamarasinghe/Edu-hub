@@ -10,7 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
-import config from '../../config'
+
 
 interface DropdownItem {
   label: string;
@@ -74,7 +74,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post(`${config.API_URL}/login`, {
+      const response = await axios.post('http://192.168.8.144:5001/login', {
         studentId,
         password
       });
@@ -84,7 +84,7 @@ const Login = () => {
       //const studId = response.data.studentId;
       await AsyncStorage.setItem('userId', studentId);
 
-      const userDataResponse = await axios.get(`${config.API_URL}/get-user-data`, {
+      const userDataResponse = await axios.get('http://192.168.8.144:5001/get-user-data', {
         params: { studentId }
       });
 
@@ -114,10 +114,10 @@ const Login = () => {
       // Navigate or continue signup for student
     } else if (value === '2') {
       // Tutor signup navigation
-      router.navigate('loginT'); // Navigate to loginT screen
+      router.navigate('/loginT'); // Navigate to loginT screen
     } else if (value === '3') {
       // Parent signup navigation
-      router.navigate('loginP'); // Navigate to loginP screen
+      router.navigate('/loginP'); // Navigate to loginP screen
     }
   };
 
@@ -125,10 +125,10 @@ const Login = () => {
     setValue(item.value);
     if (item.value === '2') {
       // Directly navigate to loginT for Tutor selection
-      router.navigate('loginT');
+      router.navigate('/loginT');
     } else if (item.value === '3') {
       // Directly navigate to loginP for Parent selection
-      router.navigate('loginP');
+      router.navigate('/loginP');
     }
   };
 

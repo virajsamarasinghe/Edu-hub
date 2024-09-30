@@ -6,7 +6,7 @@ import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-nat
 import { Calendar } from 'react-native-calendars';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { PieChart, BarChart } from 'react-native-chart-kit';
-import config from '../../config'
+
 
 import Swiper from 'react-native-swiper';
 import axios from 'axios';
@@ -51,7 +51,7 @@ const Advices = () => {
           return;
         }
 
-        const response = await axios.get(`${config.API_URL}/get-user-dataP`, {
+        const response = await axios.get('http://192.168.8.144:5001/get-user-dataP', {
           params: { emailAddress }
         });
 
@@ -68,7 +68,7 @@ const Advices = () => {
 
     const fetchAttendanceData = async (studentId: string) => {
       try {
-        const response = await axios.post(`${config.API_URL}/check-attendance`, { studentId });
+        const response = await axios.post('http://192.168.8.144:5001/check-attendance', { studentId });
         const { attendanceDates } = response.data;
         console.log('Attendance Dates:', attendanceDates);
 
