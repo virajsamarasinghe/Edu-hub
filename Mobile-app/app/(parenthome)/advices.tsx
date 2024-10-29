@@ -39,7 +39,7 @@ const Advices: React.FC = () => {
     }
 
     try {
-      const response = await axios.post('http://192.168.8.144:5001/save-attendance', {
+      const response = await axios.post('http://192.168.8.142:5001/save-attendance', {
         date,
         studentId,
         attendanceStatus,

@@ -24,23 +24,30 @@ const data = [
 const Signup = () => {
   const router = useRouter();
 
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<string>('1');
   const [isFocus, setIsFocus] = useState(false);
-
+  const [studentId, setStudentID] = useState("");
+  const [username, setUserName] = useState("");
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
+  const [emailAddress1, setEmailAddress1] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [pendingVerification, setPendingVerification] = useState(false);
+  const [password1, setPassword1] = useState('');
+  const [confirmPassword1, setConfirmPassword1] = useState('');
+  const [pendingVerification1, setPendingVerification1] = useState(false);
   const [code, setCode] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showConfirmPassword1, setShowConfirmPassword1] = useState(false);
   const [loading, setLoading] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      setValue(null);
+      setValue('1');
       setIsFocus(false);
       setFirstName('');
       setLastName('');
@@ -68,7 +75,7 @@ const Signup = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/register', {
+      const response = await axios.post('http://192.168.8.142:5001/register', {
         firstName,
         lastName,
         emailAddress,
@@ -88,12 +95,47 @@ const Signup = () => {
     }
   };
 
-  const handleDropdownChange = (item: DropdownItem) => {
-    setValue(item.value);
-    if (item.value === '2') {
-      router.navigate('signupP');
+  
+  const handleCreateUserP = async () => {
+ 
+
+    // Basic validation (replace with more robust validation)
+    if (!emailAddress || !password || !confirmPassword) {
+      alert('Please fill in all required fields (email, password, confirm password)');
+      return;
     }
-  };
+
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.142:5001/registerP', {
+        studentId,
+        username,
+        emailAddress,
+        password
+      });
+      setLoading(false);
+      console.log('Registration successful:', response.data);
+      alert('Registration successful! Please check your email for verification.');
+      setPendingVerification(true);
+      router.push({
+        pathname: '/verifyP',
+        params: { email: emailAddress }
+      })
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to register. Please try again.');
+    }
+}
+
+const handleDropdownChange = (item: any) => {
+  setValue(item.value);
+  setIsFocus(false);
+};
 
   return (
     <KeyboardAvoidingView
@@ -142,6 +184,9 @@ const Signup = () => {
                   />
                 )}
               />
+
+          {value === '1' && (
+             <>
 
               <Text style={styles.label}>First Name</Text>
               <TextInput
@@ -208,8 +253,93 @@ const Signup = () => {
                 color="#ACACAA"
               />
             </TouchableOpacity>
+            </>
+          )}
 
-              <TouchableOpacity style={styles.button} onPress={handleCreateUser}>
+         {value === '2' && (
+            <>
+          <Text style={styles.label}>Student ID</Text>
+            <TextInput
+              autoCapitalize="none"
+              value={studentId}
+              placeholder="student ID"
+              placeholderTextColor="#ACACAA"
+              onChangeText={setStudentID}
+              style={styles.inputField}
+            />
+          
+          <Text style={styles.label}>Username</Text>
+            <TextInput
+              autoCapitalize="none"
+              value={username}
+              placeholder="username"
+              placeholderTextColor="#ACACAA"
+              onChangeText={setUserName}
+              style={styles.inputField}
+            />
+          
+          <Text style={styles.label}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="example@gmail.com"
+                placeholderTextColor="#ACACAA"
+                value={emailAddress}
+                onChangeText={setEmailAddress}
+                style={styles.inputField}
+              />
+            <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Password"
+                placeholderTextColor="#ACACAA"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                style={styles.inputField}
+              />
+            <TouchableOpacity
+              onPress={() => setShowPassword(!showPassword)}
+              style={styles.eyeIcon1}
+            >
+              <Ionicons
+                name={showPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
+              <Text style={styles.label}>Confirm Password</Text>
+              <TextInput
+                placeholder="Confirm Password"
+                placeholderTextColor="#ACACAA"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                secureTextEntry={!showConfirmPassword}
+                style={styles.inputField}
+              />
+            <TouchableOpacity
+              onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+              style={styles.eyeIcon2}
+            >
+              <Ionicons
+                name={showConfirmPassword ? 'eye' : 'eye-off'}
+                size={22}
+                color="#ACACAA"
+              />
+            </TouchableOpacity>
+
+            </>
+          )}
+
+              <TouchableOpacity style={styles.button}  onPress={() => {
+         if (value === '1') {
+          handleCreateUser();  // Call student login
+          } else if (value === '2') {
+            handleCreateUserP();  // Call parent login
+          }
+          else {
+      // You can add a handler for Tutor login if needed
+          alert('Please select a valid user type');
+         }
+  }}>
                 <Text style={styles.buttonText}>SignUp</Text>
               </TouchableOpacity>
             </View>
@@ -320,12 +450,12 @@ const styles = StyleSheet.create({
   eyeIcon1: {
     position: 'absolute',
     right: wp('3%'),
-    top:hp('39.3%')
+    top:hp('40.8%')
   },
   eyeIcon2: {
     position: 'absolute',
     right: wp('3%'),
-    top:hp('48.2%')
+    top:hp('50.2%')
   },
 });
 

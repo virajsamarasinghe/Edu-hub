@@ -51,7 +51,7 @@ const Advices = () => {
           return;
         }
 
-        const response = await axios.get('http://192.168.8.144:5001/get-user-dataP', {
+        const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
           params: { emailAddress }
         });
 
@@ -68,7 +68,7 @@ const Advices = () => {
 
     const fetchAttendanceData = async (studentId: string) => {
       try {
-        const response = await axios.post('http://192.168.8.144:5001/check-attendance', { studentId });
+        const response = await axios.post('http://192.168.8.142:5001/check-attendance', { studentId });
         const { attendanceDates } = response.data;
         console.log('Attendance Dates:', attendanceDates);
 

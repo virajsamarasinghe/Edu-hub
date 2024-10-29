@@ -21,7 +21,7 @@ export default function QRCodePage() {
                     return;
                 }
 
-                const response = await axios.get('http://192.168.8.144:5001/get-qr-code', {
+                const response = await axios.get('http://192.168.8.142:5001/get-qr-code', {
                     params: { studentId }
                 });
 

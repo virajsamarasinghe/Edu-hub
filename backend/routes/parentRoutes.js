@@ -108,14 +108,14 @@ router.post("/registerP", [
 
     router.post("/loginP", [
       body('emailAddress').notEmpty().withMessage('emailAddress is required'),
-      body('password').notEmpty().withMessage('Password is required')
+      body('password1').notEmpty().withMessage('Password is required')
     ], async (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
     
-      const { emailAddress, password } = req.body;
+      const { emailAddress, password1 } = req.body;
     
       try {
         const user = await Parent.findOne({ emailAddress, isVerified: true });
@@ -123,7 +123,7 @@ router.post("/registerP", [
           return res.status(400).send({ status: "error", data: "Invalid emailAddress or password" });
         }
     
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password1, user.password);
         if (!isMatch) {
           return res.status(400).send({ status: "error", data: "Invalid emailAddress or password" });
         }

@@ -19,27 +19,38 @@ interface DropdownItem {
 
 const data = [
   { label: 'Student', value: '1' },
-  { label: 'Tutor', value: '2' },
-  { label: 'Parent', value: '3' },
+  { label: 'Parent', value: '2' },
+  { label: 'Tutor', value: '3' },
 ];
 
 const Login = () => {
   const router = useRouter();
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<string>('1'); // Set default to '1' for Student
+
   const [isFocus, setIsFocus] = useState(false);
   const [studentId, setStudentId] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
+  const [emailAddress2, setEmailAddress2] = useState('');
   const [password, setPassword] = useState('');
+  const [password1, setPassword1] = useState('');
+  const [password2, setPassword2] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
   const [loading, setLoading] = useState(false);
   const [firstName, setFirstName] = useState('');
 
   useFocusEffect(
     useCallback(() => {
       // Reset state when screen is focused
-      setValue(null);
+      setValue('1');
+      setEmailAddress('');
       setIsFocus(false);
       setStudentId('');
       setPassword('');
+      setPassword1('');
+      setEmailAddress2('');
+      setPassword2('');
 
     }, [])
   );
@@ -74,7 +85,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.144:5001/login', {
+      const response = await axios.post('http://192.168.8.142:5001/login', {
         studentId,
         password
       });
@@ -84,7 +95,7 @@ const Login = () => {
       //const studId = response.data.studentId;
       await AsyncStorage.setItem('userId', studentId);
 
-      const userDataResponse = await axios.get('http://192.168.8.144:5001/get-user-data', {
+      const userDataResponse = await axios.get('http://192.168.8.142:5001/get-user-data', {
         params: { studentId }
       });
 
@@ -108,28 +119,84 @@ const Login = () => {
     }
 
     // Handle navigation based on user type
-    if (value === '1') {
-      // Student signup logic (if any)
-      console.log('Student login');
-      // Navigate or continue signup for student
-    } else if (value === '2') {
-      // Tutor signup navigation
-      router.navigate('/loginT'); // Navigate to loginT screen
-    } else if (value === '3') {
-      // Parent signup navigation
-      router.navigate('/loginP'); // Navigate to loginP screen
-    }
+   
   };
 
-  const handleDropdownChange = (item: DropdownItem) => {
-    setValue(item.value);
-    if (item.value === '2') {
-      // Directly navigate to loginT for Tutor selection
-      router.navigate('/loginT');
-    } else if (item.value === '3') {
-      // Directly navigate to loginP for Parent selection
-      router.navigate('/loginP');
+  const handleLoginP = async () => {
+
+    if (!value) {
+      alert('Please select your user type');
+      return;
     }
+    
+    if (!emailAddress || !password1) {
+      alert('Please fill in both fields');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.142:5001/loginP', {
+        emailAddress,
+        password1
+      });
+      setLoading(false);
+      console.log('Login successful:', response.data);
+
+      await AsyncStorage.setItem('userP',emailAddress);
+
+      const userDataResponseP = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+        params: { emailAddress}
+      });
+
+      const { username, phone } = userDataResponseP.data.data;
+      await AsyncStorage.setItem('username', username);
+     
+      await AsyncStorage.setItem('phoneP', phone);
+
+      await AsyncStorage.setItem('isLoggedINP', 'true');
+
+      //alert('Login successful');
+      // Navigate to the home screen or another screen after successful login
+       router.push('/homeP');
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to login. Please check your email and password.');
+    }
+  }
+
+  const handleLoginT = async () => {
+    if (!emailAddress2 || !password2) {
+      alert('Please fill in both fields');
+      return;
+    }
+  
+    try {
+      setLoading(true);
+      const response = await axios.post('http://192.168.8.142:5001/loginT', {
+        emailAddress2,
+        password2
+      });
+      setLoading(false);
+  
+      if (response.data.status === 'success') {
+        console.log('Login successful:', response.data);
+        await AsyncStorage.setItem('userP', emailAddress2);
+        // Navigate to the home screen or another screen
+        router.push('/home');
+      } else {
+        alert('Invalid email or password');
+      }
+    } catch (error) {
+      setLoading(false);
+      alert('Failed to login. Please check your email and password.');
+    }
+  };
+  
+
+  const handleDropdownChange = (item: any) => {
+    setValue(item.value);
+    setIsFocus(false);
   };
 
   const handleSignUpNavigation = () => {
@@ -151,65 +218,161 @@ const Login = () => {
           <Text style={{ fontSize:hp('4%'), fontFamily: 'outfit-bold', paddingBottom:hp('2%'), paddingTop:-hp('1%'), textAlign: 'center' }}>Hi!, Please Login</Text>
 
           <Dropdown
-            style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
-            placeholderStyle={styles.placeholderStyle}
-            selectedTextStyle={styles.selectedTextStyle}
-            data={data}
-            maxHeight={300}
-            labelField="label"
-            valueField="value"
-            placeholder={!isFocus ? 'Select' : '...'}
-            value={value}
-            onFocus={() => setIsFocus(true)}
-            onBlur={() => setIsFocus(false)}
-            onChange={(item) => {
-              setValue((prevValue) => item.value);
-              handleDropdownChange(item);
-              setIsFocus(false);
-            }}
-            renderLeftIcon={() => (
-              <AntDesign
-                style={styles.icon}
-                color={isFocus ? 'blue' : 'black'}
-                name="Safety"
-                size={20}
+          
+                style={[styles.dropdown, isFocus && { borderColor: 'blue' }]}
+                placeholderStyle={styles.placeholderStyle}
+                selectedTextStyle={styles.selectedTextStyle}
+                data={data}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={!isFocus ? 'Select' : '...'}
+                value={value}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={(item) => {
+                  setValue(item.value);
+                  handleDropdownChange(item);
+                  setIsFocus(false);
+                }}
+                renderLeftIcon={() => (
+                  <AntDesign
+                    style={styles.icon}
+                    color={isFocus ? 'blue' : 'black'}
+                    name="Safety"
+                    size={20}
+                  />
+                )}
               />
-            )}
-          />
-          <Text  style={styles.label}>Student ID</Text>
-          <TextInput
-            autoCapitalize="none"
-            placeholder="Enter your Student ID"
-            placeholderTextColor="#ACACAA"
-            value={studentId}
-            onChangeText={setStudentId}
-            style={styles.inputField}
-          />
 
-          <Text  style={styles.label}>Password</Text>
-          <TextInput
-            placeholder="Enter your password"
-            placeholderTextColor="#ACACAA"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry={!showPassword}
-            style={styles.inputField}
-          />
-            <TouchableOpacity
-              onPress={() => setShowPassword(!showPassword)}
-              style={styles.eyeIcon}
-            >
-              <Ionicons
-                name={showPassword ? 'eye' : 'eye-off'}
-                size={22}
-                color="#ACACAA"
+           {value === '1' && (
+            <>
+              {/* Student Login Input Fields */}
+              <Text style={styles.label}>Student ID</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="Enter your Student ID"
+                placeholderTextColor="#ACACAA"
+                value={studentId}
+                onChangeText={setStudentId}
+                style={styles.inputField}
               />
-            </TouchableOpacity>
+
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Enter your password"
+                placeholderTextColor="#ACACAA"
+                value={password}
+                onChangeText={setPassword}
+                secureTextEntry={!showPassword}
+                style={styles.inputField}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword(!showPassword)}
+                style={styles.eyeIcon}
+              >
+                <Ionicons
+                  name={showPassword ? 'eye' : 'eye-off'}
+                  size={22}
+                  color="#ACACAA"
+                />
+              </TouchableOpacity>
+            </>
+          )}
+
+          {value === '3' && (
+            <>
+              {/* Tutor Login Input Fields */}
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="Enter your EmailAddress"
+                placeholderTextColor="#ACACAA"
+                value={emailAddress2}
+                onChangeText={setEmailAddress2}
+                style={styles.inputField}
+              />
+
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Enter your password"
+                placeholderTextColor="#ACACAA"
+                value={password2}
+                onChangeText={setPassword2}
+                secureTextEntry={!showPassword2}
+                style={styles.inputField}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword2(!showPassword2)}
+                style={styles.eyeIcon}
+              >
+                <Ionicons
+                  name={showPassword2 ? 'eye' : 'eye-off'}
+                  size={22}
+                  color="#ACACAA"
+                />
+              </TouchableOpacity>
+            </>
+          )}
+
+          {value === '2' && (
+            <>
+              {/* Parent Login Input Fields */}
+              <Text style={styles.label}>Email</Text>
+              <TextInput
+                autoCapitalize="none"
+                placeholder="Enter your email"
+                placeholderTextColor="#ACACAA"
+                value={emailAddress}
+                onChangeText={setEmailAddress}
+                style={styles.inputField}
+              />
+
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                placeholder="Enter your password"
+                placeholderTextColor="#ACACAA"
+                value={password1}
+                onChangeText={setPassword1}
+                secureTextEntry={!showPassword1}
+                style={styles.inputField}
+              />
+              <TouchableOpacity
+                onPress={() => setShowPassword1(!showPassword1)}
+                style={styles.eyeIcon}
+              >
+                <Ionicons
+                  name={showPassword1 ? 'eye' : 'eye-off'}
+                  size={22}
+                  color="#ACACAA"
+                />
+              </TouchableOpacity>
+            </>
+          )}
+
           
 
-          <TouchableOpacity style={styles.button} onPress={handleLogin}>
-            <Text style={styles.buttonText}>Login</Text>
-          </TouchableOpacity>
+<TouchableOpacity 
+  style={styles.button} 
+  onPress={() => {
+    if (value === '1') {
+      handleLogin();  // Call student login
+    } else if (value === '2') {
+      handleLoginP();  // Call parent login
+    }
+    else if (value === '3') {
+      handleLoginT();  
+    } else {
+      // You can add a handler for Tutor login if needed
+      alert('Please select a valid user type');
+    }
+  }}
+>
+  <Text style={styles.buttonText}>Login</Text>
+</TouchableOpacity>
+
+
+          
 
           <Link href="/verifyEmail" asChild>
             <TouchableOpacity>

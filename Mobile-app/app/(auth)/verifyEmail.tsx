@@ -20,7 +20,7 @@ const Verify = () => {
 
     
 
-      const response = await axios.post('http://192.168.8.144:5001/sendcode', 
+      const response = await axios.post('http://192.168.8.142:5001/sendcode', 
         {emailAddress},
       );
 

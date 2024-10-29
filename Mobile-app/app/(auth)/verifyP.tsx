@@ -27,11 +27,11 @@ const Verify = () => {
 
     
 
-      const response = await axios.post('http://192.168.8.144:5001/verify-emailP', { code });
+      const response = await axios.post('http://192.168.8.142:5001/verify-emailP', { code });
 
       if (response.data.status === 'success') {
         alert('Email verified successfully!');
-        router.push('/loginP'); // Navigate to login page after verification
+        router.push('/login'); // Navigate to login page after verification
       } else {
         alert('Invalid verification code.');
       }
@@ -43,7 +43,7 @@ const Verify = () => {
 
   const handleResendCode = async () => {
     try {
-      await axios.post('http://192.168.8.144:5001/resend-verification-codeP', { email });
+      await axios.post('http://192.168.8.142:5001/resend-verification-codeP', { email });
       setCountdown(60); // Reset the countdown timer
       setIsResendDisabled(true);
       alert('Verification code resent. Please check your email.');
