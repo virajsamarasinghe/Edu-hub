@@ -1,327 +1,249 @@
-import React, { useState , useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { heightPercentageToDP as hp, widthPercentageToDP as wp } from 'react-native-responsive-screen';
-import { Calendar } from 'react-native-calendars';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { PieChart, BarChart } from 'react-native-chart-kit';
+import { BarChart } from 'react-native-chart-kit';
+import { LinearGradient } from 'expo-linear-gradient';
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
+const { width } = Dimensions.get('window');
 
-import Swiper from 'react-native-swiper';
-import axios from 'axios';
-
-
-const Progress = () => {
-  const [selectedBar, setSelectedBar] = useState<number | null>(null);
-  const [markedDates, setMarkedDates] = useState<{ [key: string]: any }>({});
-  const [studentId, setStudentId] = useState<string | null>(null);
-  const [totalRecords, setTotalRecords] = useState(0);
-  const [falseCount, setFalseCount] = useState(0);
-  const [trueCount, setTrueCount] = useState(0);
-  const [pieChartData, setPieChartData] = useState([
-    { name: 'Absent days', days: 0, color: '#8C78F080', legendFontColor: '#7F7F7F', legendFontSize: 10 },
-    { name: 'Present days', days: 0, color: '#8C78F0', legendFontColor: '#7F7F7F', legendFontSize: 10 },
-  ]);
-  const [monthlyAttendance, setMonthlyAttendance] = useState<any>(null);
-
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-
-  const monthlyAttendanceData = Object.keys(monthlyAttendance || {}).map((month) => {
-    const { present, absent } = monthlyAttendance[month];
-    const total = present + absent;
-    const presentPercentage = (present / total) * 100;
-    return { month, presentPercentage };
-  });
+const ProgressScreen = ({ navigation }) => {
+  const [inputValue, setInputValue] = useState('');
 
   const barChartData = {
-    labels: monthlyAttendanceData.map((data) => monthNames[parseInt(data.month)]),
+    labels: ['Test 01', 'Test 02', 'Test 03', 'Test 04', 'Test 05', 'Test 06'],
     datasets: [
       {
-        data: monthlyAttendanceData.map((data) => data.presentPercentage),
+        data: [80, 70, 95, 85, 75, 78],
+        color: (opacity = 1) => `rgba(140, 120, 240, ${opacity})`, // Solid purple color for bars
       },
     ],
+    legend: ['Overall Percentage: 82.6%'], // Chart legend
   };
 
-  useEffect(() => {
-    const fetchStudentIdFromDatabase = async () => {
-      try {
-        const emailAddress = await AsyncStorage.getItem('userP');
-        if (!emailAddress) {
-          alert('User not found. Please log in again.');
-          return;
-        }
-
-        const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
-          params: { emailAddress }
-        });
-
-        const { studentId } = response.data.data;
-        setStudentId(studentId);
-        await AsyncStorage.setItem('studentId', studentId);
-
-        fetchAttendanceData(studentId);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        alert('Error, Failed to fetch user data');
-      }
-    };
-
-    const fetchAttendanceData = async (studentId: string) => {
-      try {
-        const response = await axios.post('http://192.168.8.142:5001/check-attendance', { studentId });
-        const { attendanceDates } = response.data;
-        console.log('Attendance Dates:', attendanceDates);
-
-        // Format dates and set marked dates
-        const formattedDates = attendanceDates.reduce((acc: any, record: any) => {
-          const dateStr = new Date(record.date).toISOString().split('T')[0]; // Convert to YYYY-MM-DD format
-          acc[dateStr] = {
-            marked: true,
-            dotColor: record.attendanceStatus ? 'green' : 'red' // Use 'green' for present and 'red' for absent
-          };
-          return acc;
-        }, {});
-
-        setMarkedDates(formattedDates);
-        setTotalRecords(attendanceDates.length);
-        const trueDatesCount = attendanceDates.filter((record: any) => record.attendanceStatus).length;
-        const falseDatesCount = attendanceDates.length - trueDatesCount;
-
-        setPieChartData([
-          { name: 'Absent Test', days: falseDatesCount, color: '#8C78F080', legendFontColor: '#7F7F7F', legendFontSize: 10 },
-          { name: 'Present Test', days: trueDatesCount, color: '#8C78F0', legendFontColor: '#7F7F7F', legendFontSize: 10 },
-        ]);
-        setTrueCount(trueDatesCount);
-        setFalseCount(falseDatesCount);
-
-        const monthlyAttendance = attendanceDates.reduce((acc: any, record: any) => {
-          const month = new Date(record.date).getMonth(); // Get month index (0-11)
-          if (!acc[month]) {
-            acc[month] = { present: 0, absent: 0 };
-          }
-          if (record.attendanceStatus) {
-            acc[month].present += 1;
-          } else {
-            acc[month].absent += 1;
-          }
-          return acc;
-        }, {});
-
-        setMonthlyAttendance(monthlyAttendance);
-      } catch (error) {
-        console.error('Error fetching attendance records:', error);
-        alert('Error, Failed to fetch attendance records');
-      }
-    };
-
-    fetchStudentIdFromDatabase();
-  }, []); // Empty dependency array to run only once on mount
-
-  const handleBarPress = (index: number) => {
-    setSelectedBar(index);
+  const chartConfig = {
+    backgroundGradientFrom: '#ffffff',
+    backgroundGradientTo: '#ffffff',
+    color: (opacity = 1) => `rgba(140, 120, 240, ${opacity})`,
+    barPercentage: 0.6,
+    fillShadowGradient: '#8C78F0',
+    fillShadowGradientOpacity: 1,
+    useShadowColorFromDataset: false,
+    propsForLabels: { fontSize: 12, fontWeight: '500', color: '#6A6A6A' },
+    decimalPlaces: 0,
+    animationDuration: 1500,
   };
 
   return (
-    
-    <LinearGradient
-      colors={['#8C78F0', 'rgba(140, 120, 140, 0)']}
-      locations={[0.37, 0.91]}
-      style={styles.container}
-    >
-      <Text style={styles.topLeftText}>Progress </Text>
-      <TouchableOpacity style={styles.iconContainerm}>
-        <Ionicons name="notifications-outline" size={30} color="#ffffff" />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.iconContainerb}>
-        <Ionicons name="chatbubble-outline" size={30} color="#ffffff" />
-      </TouchableOpacity>
-      <ScrollView contentContainerStyle={styles.container}>
-       
-        <Swiper
-          style={styles.wrapper}
-          showsButtons={false}
-          dotStyle={styles.dot}
-          activeDotStyle={styles.activeDot}
-          
-        >
-          <View style={styles.slide}>
-            <View style={styles.chartContainer}>
-            <TouchableOpacity>
-              <PieChart
-                data={pieChartData}
-                width={wp('90%')}
-                height={220}
-                chartConfig={{
-                  backgroundColor: '#1cc910',
-                  backgroundGradientFrom: '#eff3ff',
-                  backgroundGradientTo: '#efefef',
-                  decimalPlaces: 2,
-                  color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                  style: {
-                    borderRadius: 16
-                  }
-                }}
-                accessor="days"
-                backgroundColor="transparent"
-                paddingLeft="15"
-                absolute
-              />
-              </TouchableOpacity>
-              <Text style={styles.chartTitle}> Attendance Percentage</Text>
-            </View>
-          </View>
-          <View style={styles.slide}>
-            <View style={styles.chartContainer}>
-            <View style={styles.customBarContainer}>
-  {barChartData.datasets[0].data.map((value, index) => (
-    <TouchableOpacity
-      key={index}
-      style={[styles.customBar, { height: `${value}%` }]}
-      onPress={() => handleBarPress(index)}
-    >
-      <View style={styles.barContent}>
-        {selectedBar === index && (
-          <Text style={styles.percentageText}>{`${value}%`}</Text>
-        )}
+    <LinearGradient colors={['#8C78F0', '#D1C4F7']} style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        {/* Back Arrow */}
+        <View style={styles.leftContainer}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
+
+        {/* Progress Title */}
+        <View style={styles.centerContainer}>
+          <Text style={styles.title}>Progress</Text>
+        </View>
+
+        {/* Notification Icon */}
+        <View style={styles.rightContainer}>
+          <TouchableOpacity>
+            <Ionicons name="notifications-outline" size={24} color="#fff" />
+          </TouchableOpacity>
+        </View>
       </View>
-      <Text style={styles.barLabel}>{barChartData.labels[index]}</Text>
-    </TouchableOpacity>
-  ))}
-</View>
-<Text style={styles.chartTitle}>Monthly Attendance Percentage</Text>
-            </View>
-          </View>
-        </Swiper>
-      </ScrollView>
+
+      {/* Latest Test Card */}
+      <View style={styles.testCard}>
+        <Text style={styles.cardTitle}>Latest Test: Quiz 1</Text>
+        <Text style={styles.cardText}>Mark: <Text style={styles.cardHighlight}>85%</Text></Text>
+        <Text style={styles.cardText}>Rank: <Text style={styles.cardHighlight}>5th</Text></Text>
+        <Text style={styles.cardDescription}>
+          The test was focused on recent topics including mathematics and science. Keep up the good work!
+        </Text>
+      </View>
+
+     
+      {/* Enhanced Bar Chart */}
+      <View style={styles.chartContainer}>
+        <BarChart
+          data={barChartData}
+          width={width * 0.9}
+          height={220}
+          chartConfig={chartConfig}
+          fromZero
+          yAxisLabel=""
+          yAxisSuffix="%"
+          showValuesOnTopOfBars={true}
+          style={styles.chartStyle}
+        />
+      </View>
+
+       {/* Suggestion Box */}
+       <View style={styles.suggestionBox}>
+        <Text style={styles.suggestionTitle}>Suggestion</Text>
+        <View style={styles.chatBubble}>
+          <Text style={styles.chatText}>Based on Quiz 1</Text>
+        </View>
+        <View style={styles.chatBubble}>
+          <Text style={styles.chatText}>
+            All good here. We wash hands and stay home.
+          </Text>
+        </View>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Title"
+            value={inputValue}
+            onChangeText={setInputValue}
+          />
+          <TouchableOpacity style={styles.sendButton}>
+            <Ionicons name="send" size={20} color="#fff" />
+          </TouchableOpacity>
+        </View>
+      </View>
+
     </LinearGradient>
   );
-};
-
-const chartConfig = {
-  backgroundGradientFrom: '#ffffff',
-  backgroundGradientTo: '#ffffff',
-  color: (opacity = 1) => `rgba(140, 120, 240, ${opacity})`,
-  barPercentage: 0.5,
-  useShadowColorFromDataset: false,
-  fillShadowGradientFrom: '#8C78F0',
-  fillShadowGradientTo: '#8C78F0',
-  fillShadowGradientOpacity: 1,
-  propsForLabels: {
-    fontSize: 10,
-  },
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    padding: 20,
+    paddingTop: hp('12%'), // Increased paddingTop to push content further down
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
+    justifyContent: 'space-between',
+    position: 'relative',
   },
-  topLeftText: {
+  leftContainer: {
     position: 'absolute',
-    top: hp('9%'),
-    left: wp('3.7%'),
-    fontSize: 34,
-    color: '#ffffff',
-    fontWeight: 'bold',
+    left: 0,
+    top: hp('-6.5%'),
   },
-  iconContainerb: {
-    flexDirection: 'row',
-    position: 'absolute',
-    top: hp('5.6%'),
-    right: wp('4.8%'),
-  },
-  iconContainerm: {
-    flexDirection: 'row',
-    position: 'absolute',
-    top: hp('5.6%'),
-    right: wp('15.7%'),
-  },
-  calendarContainer: {
-    backgroundColor: '#ffffff',
-    padding: 10,
-    borderRadius: 30,
-    shadowColor: '#8C78F0',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 5,
-    marginTop: hp('17%'),
-    width: wp('94.7%'),
-  },
-  calendar: {
-    width: '100%',
-  },
-  wrapper: {
-    height: 300,
-  },
-  slide: {
+  centerContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    top: hp('-2.6%'),
+    left: wp('-28%'),
+  },
+  rightContainer: {
+    position: 'absolute',
+    right: 0,
+    top: hp('-6.5%'),
+  },
+  title: {
+    color: '#ffffff',
+    fontSize: hp('3.8%'),
+    fontWeight: '600',
+    marginTop: 20, // Adjust marginTop to move the title down
+  },
+  testCard: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#4A4A4A',
+  },
+  cardText: {
+    fontSize: 16,
+    color: '#4A4A4A',
+    marginBottom: 5,
+  },
+  cardHighlight: {
+    color: '#8C78F0',
+    fontWeight: 'bold',
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: '#555',
+    marginTop: 10,
+  },
+  suggestionBox: {
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 20,
+    marginBottom: 30,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 5,
+  },
+  suggestionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: '#4A4A4A',
+  },
+  chatBubble: {
+    backgroundColor: '#8C78F0',
+    padding: 12,
+    borderRadius: 20,
+    marginBottom: 10,
+    maxWidth: '80%',
+  },
+  chatText: {
+    color: '#fff',
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 25,
+    padding: 10,
+    marginRight: 10,
+    fontSize: 16,
+    color: '#333',
+  },
+  sendButton: {
+    backgroundColor: '#8C78F0',
+    padding: 12,
+    borderRadius: 25,
+    
   },
   chartContainer: {
     backgroundColor: '#ffffff',
+    borderRadius: 20,
     padding: 10,
-    borderRadius: 30,
-    shadowColor: '#8C78F0',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 2,
+    alignItems: 'center',
+    marginTop: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
     elevation: 5,
-    marginBottom: hp('6%'),
+    top: hp('-2.3%'),
   },
-  customBarContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'space-around',
-    height: 220,
-    width: wp('90%'),
-  },
-  customBar: {
-    width: '7%',
-    backgroundColor: '#8C78F0',
-    borderRadius: 4,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  barContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chartTitle: {
-    textAlign: 'center',
-    marginTop: 10,
-    fontSize: 14,
-    color: '#000',
-    fontWeight: '300',
-  },
-  barLabel: {
-    color: '#ffffff',
-    fontSize: 14,
-    marginTop: 4,
-  },
-  dot: {
-    backgroundColor: 'rgba(0,0,0,.2)',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginBottom: hp('3%'),
-  },
-  activeDot: {
-    backgroundColor: '#8C78F0',
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    marginBottom: hp('3%'),
-  },
-  percentageText: {
-    color: '#ffffff',
-    fontSize: 14,
-    marginTop: 4,
+  chartStyle: {
+    borderRadius: 20,
+    overflow: 'hidden',
+    
   },
 });
 
-export default Progress;
+export default ProgressScreen;
