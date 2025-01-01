@@ -27,6 +27,14 @@ export default function StartPage() {
         return;
       }
 
+      const tutorLogin = await AsyncStorage.getItem('isLoggedINT');
+      if (tutorLogin === 'true') {
+        setTimeout(() => {
+          router.push('/homeT');
+        }, 2000); // Add delay of 2 seconds
+        return;
+      }
+
       // If no user is logged in, navigate to start
       setTimeout(() => {
         router.push('/start');

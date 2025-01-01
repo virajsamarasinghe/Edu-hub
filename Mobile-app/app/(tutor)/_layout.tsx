@@ -4,9 +4,6 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
-
-
-
 export default function TabLayout() {
     return (
         <Tabs screenOptions={{
@@ -20,37 +17,36 @@ export default function TabLayout() {
             tabBarInactiveTintColor: '#ffffff',
             tabBarLabelStyle: {
                 fontSize: 12,
-                marginTop: -12, // Adjust this value to reduce the gap between icon and label
+                 // Adjust this value to reduce the gap between icon and label
             },
             tabBarItemStyle: {
-                marginBottom: -10, // Adjust this value to move the icon and label down
+                marginTop: 8, // Adjust this value to move the icon and label down
             }
         }}>
-            <Tabs.Screen name='homeP'
+            <Tabs.Screen name='homeT'
                 options={{
                     tabBarLabel: 'Home',
                     tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />
                 }}
             />
-            <Tabs.Screen name='scheduleP'
+            <Tabs.Screen name='scheduleT'
                 options={{
                     tabBarLabel: 'Schedule',
                     tabBarIcon: ({ color }) => <FontAwesome name="calendar-times-o" size={26} color={color} />
                 }}
             />
-            <Tabs.Screen name='classFeeP'
+            <Tabs.Screen name='classFeeT'
                 options={{
                     tabBarLabel: 'Class Fee',
                     tabBarIcon: ({ color }) => <MaterialIcons name="payments" size={26} color={color} />
                 }}
             />
-            <Tabs.Screen name='profileP'
+            <Tabs.Screen name='profileT'
                 options={{
                     tabBarLabel: 'Profile',
                     tabBarIcon: ({ color }) => <MaterialCommunityIcons name="account-outline" size={26} color={color} />,
                 }}
             />
         </Tabs>
-        
     );
 }

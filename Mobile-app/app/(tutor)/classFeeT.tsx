@@ -5,7 +5,7 @@ import { Feather } from '@expo/vector-icons';
 
 
 
-export default function Schedule() {
+export default function ClassFee() {
     return (
         <LinearGradient
             colors={['#8C78F0', 'rgba(140, 120, 140, 0)']}
