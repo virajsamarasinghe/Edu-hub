@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, BackHandler } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
-const Advices = () => {
+const Resources = () => {
   return (
     <LinearGradient
       colors={['#8C78F0', 'rgba(140, 120, 140, 0)']}
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-export default Advices;
+export default Resources;

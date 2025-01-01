@@ -20,10 +20,10 @@ export default function TabLayout() {
             tabBarInactiveTintColor: '#ffffff',
             tabBarLabelStyle: {
                 fontSize: 12,
-                marginTop: -12, // Adjust this value to reduce the gap between icon and label
+                 // Adjust this value to reduce the gap between icon and label
             },
             tabBarItemStyle: {
-                marginBottom: -10, // Adjust this value to move the icon and label down
+                marginTop: 8, // Adjust this value to move the icon and label down
             }
         }}>
             <Tabs.Screen name='homeP'

@@ -38,7 +38,7 @@ export default function Home() {
             }
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.142:5001/get-user-data', {
+            const response = await axios.get('http://192.168.8.153:5001/get-user-data', {
                 params: { studentId }
               });
 
@@ -60,6 +60,19 @@ export default function Home() {
       const handlePress = () => {
         router.push('/QR'); // Navigate to the /reset route
       };
+      const handleQuizPress = () => {
+        router.push('/quiz'); // Navigate to the /attendance route
+      };
+      
+      const handleProgressSPress = () => {
+        router.push('/progressS'); // Navigate to the /progress route
+      };
+      const handleResourcesPress = () => {
+        router.push('/resources'); // Navigate to the /progress route
+      };
+      const handleTutorsadvicesPress = () => {
+        router.push('/tutorsadvices'); // Navigate to the /progress route
+      };
 
 
       
@@ -80,23 +93,23 @@ export default function Home() {
             <Text style={styles.yourLearningtimeText}>Your Learning Time</Text>
             <Text style={styles.welcomeText}>Welcome to</Text>
             <Text style={styles.eduHubText}>Edu-Hub!</Text>
-            <TouchableOpacity style={styles.box1}>
+            <TouchableOpacity style={styles.box1} onPress={handleQuizPress}>
                 <Image source={require('./../../assets/icon/quiz.png')} style={styles.quizImage} />
                 <Text style={styles.quizText}>Quiz</Text>
                 <Text style={styles.quiznoteText}>Upcoming Quizes</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.box2} >
+            <TouchableOpacity style={styles.box2} onPress={handleResourcesPress}>
             <Image source={require('./../../assets/icon/resourcess.png')} style={styles.resourcesImage} />
                 <Text style={styles.resourcesText}>Resources</Text>
                 <Text style={styles.resourcenoteText}>You can download all the resources from here!</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.box3} >
+            <TouchableOpacity style={styles.box3} onPress={handleProgressSPress} >
             <Image source={require('./../../assets/icon/progress.png')} style={styles.progressImage} />
                 <Text style={styles.progressText}>Progress</Text>
                 <Text style={styles.progressnoteText}>Your progress according{'\n'} to your marks</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.box4} >
+            <TouchableOpacity style={styles.box4} onPress={handleTutorsadvicesPress}>
             <Image source={require('./../../assets/icon/chat.png')} style={styles.chatImage} />
                 <Text style={styles.chatText}>Tutor’s
                 Advices</Text>
