@@ -17,7 +17,10 @@ export default function TabLayout() {
             tabBarActiveTintColor: '#FFD700',
             tabBarInactiveTintColor: '#ffffff',
             tabBarLabelStyle: {
+
                 fontSize: hp('1.3%'),
+
+                
                  // Adjust this value to reduce the gap between icon and label
             },
             tabBarItemStyle: {
