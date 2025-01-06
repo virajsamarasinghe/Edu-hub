@@ -158,7 +158,7 @@ export default function Profile() {
 
     const logout = async () => {
         try {
-            await AsyncStorage.removeItem('isLoggedIN');
+            await AsyncStorage.removeItem('isLoggedINT');
             router.replace('/login');
         } catch (error) {
             console.error('Error logging out:', error);

@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const { body, validationResult } = require('express-validator');
 const rateLimit = require('express-rate-limit');
 const Tutor = require('../models/TutorDetails');
+
 const predefinedTutors = require('../config/predefinedTutors.json');
 
 const router = express.Router();
@@ -19,11 +20,11 @@ router.post(
   '/loginT',
   loginLimiter,
   [
-    body('emailAddress')
+    body('emailAddress2')
       .isEmail()
       .withMessage('Valid Email Address is required')
       .normalizeEmail(),
-    body('password').notEmpty().withMessage('Password is required'),
+    body('password2').notEmpty().withMessage('Password is required'),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -31,31 +32,29 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { emailAddress, password } = req.body;
+    const { emailAddress2, password2 } = req.body;
 
     try {
       // Check if the user exists in the database
-      let tutor = await Tutor.findOne({ emailAddress });
+      let tutor = await Tutor.findOne({ emailAddress2 });
       if (tutor) {
         // Validate password
         const isMatch = tutor.isPredefined
-          ? await bcrypt.compare(password, tutor.password) // Compare raw password with hashed password for predefined users
-          : await tutor.comparePassword(password); // Regular user password check
+          ? await bcrypt.compare(password2, tutor.password) // Compare raw password with hashed password for predefined users
+          : await tutor.comparePassword(password2); // Regular user password check
         
         if (!isMatch) {
           return res.status(400).json({ status: 'error', data: 'Invalid email or password' });
         }
 
-        if (!tutor.isVerified) {
-          return res.status(400).json({ status: 'error', data: 'Please verify your email before logging in.' });
-        }
+       
 
         return res.status(200).send({ status: "success", data: "Login successful" });
       }
 
       // Check predefined credentials if the user is not found
-      const predefinedTutor = predefinedTutors.find((u) => u.emailAddress === emailAddress);
-      if (!predefinedTutor || !(await bcrypt.compare(password, predefinedTutor.passwordHash))) {
+      const predefinedTutor = predefinedTutors.find((u) => u.emailAddress === emailAddress2);
+      if (!predefinedTutor || !(await bcrypt.compare(password2, predefinedTutor.passwordHash))) {
         return res.status(400).json({ status: 'error', data: 'Invalid email or password' });
       }
 
@@ -79,6 +78,9 @@ router.post(
     }
   }
 );
+
+
+
 
 
 

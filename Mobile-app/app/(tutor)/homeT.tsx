@@ -43,11 +43,11 @@ export default function Home() {
             }
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
-                params: { emailAddress }
-              });
+            // const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+            //     params: { emailAddress }
+            //   });
 
-              const { username } = response.data.data;
+              //const { username } = response.data.data;
 
     
               setUsername(username);
@@ -62,23 +62,23 @@ export default function Home() {
         fetchPhoneFromDatabase();
       }, []);
       const handleQuizPress = () => {
-        router.push('/quizT'); // Navigate to the /attendance route
+        //router.push('/quizT'); // Navigate to the /attendance route
       };
       
       const handleResourcesPress = () => {
-        router.push('/progressT'); // Navigate to the /progress route
+        //router.push('/progressT'); // Navigate to the /progress route
       };
       const handleContactPress = () => {
-        router.push('/contactT'); // Navigate to the /progress route
+        //router.push('/contactT'); // Navigate to the /progress route
       };
       const handleAdvicesPress = () => {
-        router.push('/advicesT'); // Navigate to the /progress route
+        //router.push('/advicesT'); // Navigate to the /progress route
       };
       const handleAttendancePress = () => {
-        router.push('/attendanceT'); // Navigate to the /attendance route
+        //router.push('/attendanceT'); // Navigate to the /attendance route
       };
       const handleProgressPress = () => {
-        router.push('/progressT'); // Navigate to the /progress route
+        //router.push('/progressT'); // Navigate to the /progress route
       };
 
 
@@ -127,7 +127,7 @@ export default function Home() {
             <Text style={styles.quiznoteText}>Students Attendance </Text>
             </TouchableOpacity>
             <Text style={styles.eduHubText}>Edu-Hub!</Text>
-            <Text style={styles.hellovirajText}>Hello {username},</Text>
+            
         </LinearGradient>
     );
 }
