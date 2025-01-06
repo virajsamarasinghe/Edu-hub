@@ -1,5 +1,5 @@
 import React, { useState , useEffect } from 'react';
-import { Button, TextInput, View, StyleSheet, Image, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform, TouchableOpacity } from 'react-native';
+import { Button, TextInput, View, StyleSheet, Image, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform, TouchableOpacity, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -24,11 +24,12 @@ export default function Profile() {
     const [isEditingPhone, setIsEditingPhone] = useState(false);
     const [isEditingPassword, setIsEditingPassword] = useState(false);
     const [password, setPassword] = useState('');
-    const [profileImage, setProfileImage] = useState(null);
+    const [profileImage, setProfileImage] = useState<string | null>(null);
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [Email, setEmailAddress] = useState('');
     const [studentId, setStudentId] = useState('');
+    
     const router = useRouter();
     
 
@@ -50,8 +51,92 @@ export default function Profile() {
     
         fetchData();
       }, []);
-  
 
+    //   useEffect(() => {
+    //     (async () => {
+    //         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    //         if (status !== 'granted') {
+    //             Alert.alert('Sorry, we need camera roll permissions to upload profile photo!');
+    //         }
+    //     })();
+    // }, []);
+
+    useEffect(() => {
+      const loadProfileImage = async () => {
+          try {
+              const savedImage = await AsyncStorage.getItem('profileImage');
+              if (savedImage) {
+                  setProfileImage(savedImage);
+              }
+          } catch (error) {
+              console.error('Error loading profile image:', error);
+          }
+      };
+
+      loadProfileImage();
+  }, []);
+  
+  const pickImage = async (): Promise<void> => {
+    try {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.5,
+        });
+
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+            const selectedImageUri = result.assets[0].uri;
+            setProfileImage(selectedImageUri); // Now TypeScript knows this is a string
+            await uploadImage(selectedImageUri);
+        }
+    } catch (error) {
+        console.error('Error picking image:', error);
+        Alert.alert('Error', 'Failed to pick image');
+    }
+};
+
+  // Function to upload image to server
+  const uploadImage = async (imageUri: string) => {
+    try {
+        const studentId = await AsyncStorage.getItem('userId');
+        if (!studentId) {
+            Alert.alert('Error', 'User not found. Please log in again.');
+            return;
+        }
+
+        // Get the file name from the uri
+        const uriParts = imageUri.split('.');
+        const fileType = uriParts[uriParts.length - 1];
+
+        // Create form data
+        const formData = new FormData();
+        formData.append('studentId', studentId);
+        formData.append('profileImage', {
+            uri: Platform.OS === 'android' ? imageUri : imageUri.replace('file://', ''),
+            name: `photo.${fileType}`,
+            type: `image/${fileType}`,
+        } as any); // Type assertion to avoid TypeScript error
+
+        const response = await axios.post('http://192.168.8.142:5001/upload-profile-image', formData, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
+            transformRequest: (data, headers) => {
+                return formData; // Prevent axios from trying to transform the formData
+            },
+        });
+
+        if (response.data.success) {
+            Alert.alert('Success', 'Profile photo updated successfully');
+            await AsyncStorage.setItem('profileImage', imageUri);
+        }
+    } catch (error) {
+        console.error('Error uploading image:', error);
+        Alert.alert('Error', 'Failed to upload image');
+    }
+};
       const updatePhone = async () => {
         if (!phone) {
           alert('Please enter a phone number');
@@ -65,7 +150,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.135:5001/phone', {
+          const response = await axios.post('http://192.168.8.142:5001/phone', {
             studentId,
             phone,
           });
@@ -96,7 +181,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.153:5001/firstname', {
+          const response = await axios.post('http://192.168.8.142:5001/firstname', {
             studentId,
             firstName,
           });
@@ -127,7 +212,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.135:5001/lastname', {
+          const response = await axios.post('http://192.168.8.142:5001/lastname', {
             studentId,
             lastName,
           });
@@ -161,7 +246,7 @@ export default function Profile() {
             
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.135:5001/get-user-data', {
+            const response = await axios.get('http://192.168.8.142:5001/get-user-data', {
                 params: { studentId }
               });
 
@@ -229,8 +314,14 @@ export default function Profile() {
             <View style={styles.box}/>
                 
             
-            <TouchableOpacity style={styles.box1}>
-                <Image source={require('./../../assets/images/profile.png')} style={styles.profileImage} />
+            <TouchableOpacity style={styles.box1} onPress={pickImage}>
+                <Image 
+                    source={profileImage ? { uri: profileImage } : require('./../../assets/images/profile.png')} 
+                    style={styles.profileImage} 
+                />
+                <View style={styles.editPhotoButton}>
+                    <FontAwesome name="camera" size={16} color="#ffffff" />
+                </View>
             </TouchableOpacity>
             <Text style={styles.hellovirajText}>Hello {firstName},</Text>
             <Text style={styles.idText}>ID : {studentId}</Text>
@@ -454,7 +545,7 @@ const styles = StyleSheet.create({
     box: {
         position: 'absolute',
         
-        width: '100%',
+        width: '97%',
         height: hp('80%'),
         backgroundColor: '#ffffff',
         top: hp('20%'),
@@ -509,4 +600,18 @@ const styles = StyleSheet.create({
         marginLeft: -wp('7%'),
         top: hp('0.1%'),
     },
+ 
+  editPhotoButton: {
+      position: 'absolute',
+      bottom: 0,
+      right: 0,
+      backgroundColor: '#8C78F0',
+      padding: hp('3%'),
+      borderRadius: 20,
+      elevation: 3,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+  },
 });

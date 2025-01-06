@@ -7,7 +7,10 @@ const userSchema = new mongoose.Schema({
   password: String,
   studentId: String,
   phone: String,
-  profilePhoto: String,
+  profilePhoto: {
+    type: String,
+    default: null
+  },
   verificationCode: String,
   qrCode: String,
   isVerified: { type: Boolean, default: false },

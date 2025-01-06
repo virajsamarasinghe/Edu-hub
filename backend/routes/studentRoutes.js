@@ -1,4 +1,7 @@
 require('dotenv').config();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const express = require('express');
 const bcrypt = require('bcrypt');
 const QRCode = require('qrcode');
@@ -24,6 +27,38 @@ function generateVerificationToken(userId) {
   const options = { expiresIn: '1h' }; // Token expires in 1 hour
   return jwt.sign(payload, secret, options);
 }
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+      const uploadDir = 'uploads/profiles';
+      if (!fs.existsSync(uploadDir)) {
+          fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      cb(null, 'profile-' + req.body.studentId + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+// File filter
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+  if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+  } else {
+      cb(new Error('Invalid file type. Only JPEG, PNG and JPG are allowed.'), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+      fileSize: 5 * 1024 * 1024 // 5MB max file size
+  }
+});
 
 
 
@@ -353,7 +388,8 @@ router.get('/get-user-data', async (req, res) => {
         phone: user.phone,
         emailAddress: user.emailAddress,
         firstName: user.firstName,
-        lastName: user.lastName
+        lastName: user.lastName,
+        profilePhoto: student.profilePhoto,
       }
     });
   } catch (error) {
@@ -376,6 +412,99 @@ router.get('/get-qr-code', async (req, res) => {
   } catch (error) {
     console.error('Error fetching QR code:', error);
     res.status(500).send({ error: error.message });
+  }
+});
+
+router.post('/upload-profile-image', upload.single('profileImage'), async (req, res) => {
+  try {
+      if (!req.file) {
+          return res.status(400).json({
+              success: false,
+              message: 'No file uploaded'
+          });
+      }
+
+      const { studentId } = req.body;
+      if (!studentId) {
+          // Delete uploaded file if studentId not provided
+          fs.unlinkSync(req.file.path);
+          return res.status(400).json({
+              success: false,
+              message: 'Student ID is required'
+          });
+      }
+
+      // Find the student
+      const student = await User.findOne({ studentId: studentId });
+      if (!student) {
+          fs.unlinkSync(req.file.path);
+          return res.status(404).json({
+              success: false,
+              message: 'Student not found'
+          });
+      }
+
+      // Delete old profile photo if it exists
+      if (student.profilePhoto) {
+          const oldImagePath = path.join(__dirname, student.profilePhoto);
+          if (fs.existsSync(oldImagePath)) {
+              fs.unlinkSync(oldImagePath);
+          }
+      }
+
+      // Update student's profile photo path in database
+      const imageUrl = req.file.path.replace(/\\/g, '/'); // Convert Windows path to URL format
+      student.profilePhoto = imageUrl;
+      await student.save();
+
+      res.json({
+          success: true,
+          message: 'Profile photo uploaded successfully',
+          data: {
+              imageUrl: imageUrl
+          }
+      });
+
+  } catch (error) {
+      // Clean up uploaded file if there's an error
+      if (req.file) {
+          fs.unlinkSync(req.file.path);
+      }
+      console.error('Error uploading profile photo:', error);
+      res.status(500).json({
+          success: false,
+          message: 'Error uploading profile photo',
+          error: error.message
+      });
+  }
+});
+
+// Endpoint to serve profile images
+router.get('/profile-image/:studentId', async (req, res) => {
+  try {
+      const student = await User.findOne({ studentId: req.params.studentId });
+      if (!student || !student.profilePhoto) {
+          return res.status(404).json({
+              success: false,
+              message: 'Profile image not found'
+          });
+      }
+
+      const imagePath = path.join(__dirname, student.profilePhoto);
+      if (fs.existsSync(imagePath)) {
+          res.sendFile(imagePath);
+      } else {
+          res.status(404).json({
+              success: false,
+              message: 'Image file not found'
+          });
+      }
+  } catch (error) {
+      console.error('Error serving profile image:', error);
+      res.status(500).json({
+          success: false,
+          message: 'Error serving profile image'
+      });
   }
 });
 
