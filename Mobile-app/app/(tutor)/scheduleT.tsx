@@ -115,7 +115,7 @@ export default function Home() {
             highlightDateNameStyle={{ color: '#fff' }}
             highlightDateNumberStyle={{ color: '#fff' }}
             onDateSelected={(date) => {
-                const selectedDate = new Date(date);
+                const selectedDate = date.toDate();
                 setSelectedDate(selectedDate);
                 // Reset category when date is selected
                 setSelectedCategory('');
