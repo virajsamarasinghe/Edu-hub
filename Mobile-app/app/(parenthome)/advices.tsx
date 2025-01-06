@@ -13,7 +13,7 @@ const TutorsAdvices = () => {
     // Fetch messages when the component mounts
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://192.168.8.135:5001/api/chat/${conversationId}`);
+        const response = await axios.get(`http://172.20.10.2:5001/api/chat/${conversationId}`);
         setMessages(response.data.messages); // Assuming your backend sends messages in a 'messages' array
       } catch (error) {
         console.error('Error fetching messages:', error);

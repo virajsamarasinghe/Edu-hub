@@ -43,7 +43,7 @@ export default function Home() {
             }
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+            const response = await axios.get('http://172.20.10.2:5001/get-user-dataP', {
                 params: { emailAddress }
               });
 

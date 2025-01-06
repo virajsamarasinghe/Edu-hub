@@ -28,7 +28,7 @@ const Verify = () => {
 
     
 
-      const response = await axios.post('http://192.168.8.153:5001/verify-email', { code });
+      const response = await axios.post('http://172.20.10.2:5001/verify-email', { code });
 
       if (response.data.status === 'success') {
         alert('Email verified successfully!');
@@ -45,7 +45,7 @@ const Verify = () => {
 
   const handleResendCode = async () => {
     try {
-      await axios.post('http://192.168.8.153:5001/resend-verification-code', { email });
+      await axios.post('http://172.20.10.2:5001/resend-verification-code', { email });
       setCountdown(60); // Reset the countdown timer
       setIsResendDisabled(true);
       alert('Verification code resent. Please check your email.');
