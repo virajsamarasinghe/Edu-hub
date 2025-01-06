@@ -1,25 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Keyboard, Platform, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
 
 const TutorsAdvices = () => {
-  const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([
-    { id: '1', text: 'Hello Student , how are you ? This is your teacher , how can I help you ?. I heard you have experience in marketing. I would like to hear more about it. We need to focus more on promoting our products.', sender: 'tutor' },
-    { id: '2', text: 'All good here. We wash hands and stay home.', sender: 'user' },
-    { id: '3', text: 'Hello everybody! I’m Ola.', sender: 'tutor' },
-  ]);
+  const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([]);
   const [input, setInput] = useState('');
+  const conversationId = '12345'; // Replace with the actual conversation ID
 
-  const sendMessage = () => {
+  useEffect(() => {
+    // Fetch messages when the component mounts
+    const fetchMessages = async () => {
+      try {
+        const response = await axios.get(`http://192.168.8.135:5001/api/chat/${conversationId}`);
+        setMessages(response.data.messages); // Assuming your backend sends messages in a 'messages' array
+      } catch (error) {
+        console.error('Error fetching messages:', error);
+      }
+    };
+
+    fetchMessages();
+  }, []);
+
+  const sendMessage = async () => {
     if (input.trim()) {
       const newMessage = {
-        id: Date.now().toString(),
         text: input,
         sender: 'user',
+        conversationId,
       };
-      setMessages([...messages, newMessage]);
-      setInput('');
+
+      try {
+        const response = await axios.post(`http://192.168.8.135:5001/api/chat/send`, newMessage);
+        setMessages([...messages, response.data]); // Update the messages list with the response from the backend
+        setInput('');
+      } catch (error) {
+        console.error('Error sending message:', error);
+      }
     }
   };
 

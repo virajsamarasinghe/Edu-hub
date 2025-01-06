@@ -65,7 +65,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.153:5001/phoneP', {
+          const response = await axios.post('http://192.168.8.135:5001/phoneP', {
             emailAddress,
             phone,
           });
@@ -96,7 +96,7 @@ export default function Profile() {
             return;
           }
     
-          const response = await axios.post('http://192.168.8.142:5001/username', {
+          const response = await axios.post('http://192.168.8.135:5001/username', {
             emailAddress,
             username,
           });
@@ -130,7 +130,7 @@ export default function Profile() {
             
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.142:5001/get-user-dataP', {
+            const response = await axios.get('http://192.168.8.135:5001/get-user-dataP', {
                 params: { emailAddress}
               });
 

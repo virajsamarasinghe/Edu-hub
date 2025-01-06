@@ -38,7 +38,7 @@ export default function Home() {
             }
       
             // Fetch the latest phone number from the database
-            const response = await axios.get('http://192.168.8.153:5001/get-user-data', {
+            const response = await axios.get('http://192.168.8.135:5001/get-user-data', {
                 params: { studentId }
               });
 
