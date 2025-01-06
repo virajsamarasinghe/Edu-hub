@@ -602,11 +602,13 @@ const styles = StyleSheet.create({
     },
  
   editPhotoButton: {
+      top: hp('-1%'),
+      bottom:hp('5%'),
       position: 'absolute',
-      bottom: 0,
-      right: 0,
-      backgroundColor: '#8C78F0',
-      padding: hp('3%'),
+     
+      right: hp('-1%'),
+      backgroundColor: '#949494',
+      padding: hp('0.5%'),
       borderRadius: 20,
       elevation: 3,
       shadowColor: '#000',

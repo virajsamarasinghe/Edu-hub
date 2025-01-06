@@ -389,7 +389,7 @@ router.get('/get-user-data', async (req, res) => {
         emailAddress: user.emailAddress,
         firstName: user.firstName,
         lastName: user.lastName,
-        profilePhoto: student.profilePhoto,
+        profilePhoto: user.profilePhoto,
       }
     });
   } catch (error) {
