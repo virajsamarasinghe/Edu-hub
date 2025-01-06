@@ -1,11 +1,11 @@
 import { useRouter } from 'expo-router';
+import { useFocusEffect } from '@react-navigation/native';
 import { Link } from 'expo-router';
 import React, { useState, useCallback, useEffect } from 'react';
-import { View, StyleSheet,TouchableOpacity, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform,BackHandler } from 'react-native';
+import { View, Alert,StyleSheet,TouchableOpacity, TextInput, Pressable, Text, KeyboardAvoidingView, ScrollView, Platform,BackHandler } from 'react-native';
 import { Dropdown } from 'react-native-element-dropdown';
 import LottieView from 'lottie-react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { useFocusEffect } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -112,7 +112,7 @@ const Login = () => {
 
       //alert('Login successful');
       // Navigate to the home screen or another screen after successful login
-       router.push('/home');
+       router.push('/homeT');
     } catch (error) {
       setLoading(false);
       alert('Failed to login. Please check your student ID and password.');
@@ -165,33 +165,53 @@ const Login = () => {
     }
   }
 
-  const handleLoginT = async () => {
-    if (!emailAddress2 || !password2) {
-      alert('Please fill in both fields');
-      return;
-    }
+ 
+
+
+
+const handleLoginT = async () => {
+  if (!emailAddress2 || !password2) {
+    Alert.alert('Validation Error', 'Please fill in both email and password fields');
+    return;
+  }
+
+  try {
+    setLoading(true);
+
+    // Make the API request
+    const response = await axios.post('http://192.168.8.142:5001/loginT', {
+       emailAddress2, // Trim whitespace for better validation
+       password2,
+    });
+
+    setLoading(false);
+
+    console.log('Login successful:', response.data);
+
+    // Store login state in AsyncStorage
+    // await AsyncStorage.setItem('userT', emailAddress2);
+    // const userDataResponseT = await axios.get('http://192.168.8.142:5001/get-user-dataT', {
+    //   params: { emailAddress}
+    // });
+
+    // await AsyncStorage.setItem('isLoggedINT', 'true');
+    // const { username, phone } = userDataResponseT.data.data;
+    // await AsyncStorage.setItem('usernameT', username);
+   
+    // await AsyncStorage.setItem('phoneT', phone);
+    // Navigate to the home page
+    router.push('/homeT');
+  } catch (error) {
+    setLoading(false);
+    console.error('Login error:', error);
+  }
+};
+
   
-    try {
-      setLoading(true);
-      const response = await axios.post('http://192.168.8.135:5001/loginT', {
-        emailAddress2,
-        password2
-      });
-      setLoading(false);
   
-      if (response.data.status === 'success') {
-        console.log('Login successful:', response.data);
-        await AsyncStorage.setItem('userP', emailAddress2);
-        // Navigate to the home screen or another screen
-        router.push('/home');
-      } else {
-        alert('Invalid email or password');
-      }
-    } catch (error) {
-      setLoading(false);
-      alert('Failed to login. Please check your email and password.');
-    }
-  };
+
+
+  
   
 
   const handleDropdownChange = (item: any) => {

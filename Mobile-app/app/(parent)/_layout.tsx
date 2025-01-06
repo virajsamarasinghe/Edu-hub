@@ -32,13 +32,13 @@ export default function TabLayout() {
                     tabBarIcon: ({ color }) => <Ionicons name="home" size={26} color={color} />
                 }}
             />
-            <Tabs.Screen name='schedule'
+            <Tabs.Screen name='scheduleP'
                 options={{
                     tabBarLabel: 'Schedule',
                     tabBarIcon: ({ color }) => <FontAwesome name="calendar-times-o" size={26} color={color} />
                 }}
             />
-            <Tabs.Screen name='classFee'
+            <Tabs.Screen name='classFeeP'
                 options={{
                     tabBarLabel: 'Class Fee',
                     tabBarIcon: ({ color }) => <MaterialIcons name="payments" size={26} color={color} />

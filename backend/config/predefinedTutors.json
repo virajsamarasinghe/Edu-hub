@@ -1,0 +1,19 @@
+
+  [
+    {
+      "username": "tutor1",
+      "emailAddress": "t6@example.com",
+      "passwordHash": "$2b$10$k7USrp46igz.PU6/xCQlE.9Bm3zlaIpHCPjCslKJr91Mf.y9GSf.a", 
+      "phone": "+1234567890",
+      "profilePhoto": "https://example.com/profilePhotos/tutor1.jpg"
+    },
+    {
+      "username": "tutor2",
+      "emailAddress": "t7@example.com",
+      "passwordHash": "$2b$10$k7USrp46igz.PU6/xCQlE.9Bm3zlaIpHCPjCslKJr91Mf.y9GSf.a", 
+      "phone": "+0987654321",
+      "profilePhoto": "https://example.com/profilePhotos/tutor2.jpg"
+    }
+  ]
+  
+  

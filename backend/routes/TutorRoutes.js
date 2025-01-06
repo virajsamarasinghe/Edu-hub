@@ -1,45 +1,87 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-
 const { body, validationResult } = require('express-validator');
-const mongoose = require('mongoose');
+const rateLimit = require('express-rate-limit');
+const Tutor = require('../models/TutorDetails');
 
-require('../models/TutorDetails');
-const Tutor = mongoose.model('Tutors');
+const predefinedTutors = require('../config/predefinedTutors.json');
 
 const router = express.Router();
 
-
-router.post("/loginT", [
-  body('emailAddress2').notEmpty().withMessage('Email Address is required'),
-  body('password2').notEmpty().withMessage('Password is required')
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { emailAddress2, password2 } = req.body;
-
-  try {
-    // Find the tutor by email
-    const tutor = await Tutor.findOne({ emailAddress2 });
-    if (!tutor) {
-      return res.status(400).send({ status: 'error', data: 'Invalid email or password' });
-    }
-
-    // Compare the plain text password
-    if (tutor.password !== password2) {
-      return res.status(400).send({ status: 'error', data: 'Invalid password' });
-    }
-
-    res.status(200).send({ status: 'success', data: 'Login successful' });
-  } catch (error) {
-    console.error('Error during login:', error);
-    res.status(500).send({ status: 'error', data: error.message });
-  }
+// Rate limiter to prevent brute-force attacks
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 login attempts per windowMs
+  message: 'Too many login attempts from this IP, please try again after 15 minutes',
 });
 
+// POST /loginT - Tutor Login
+router.post(
+  '/loginT',
+  loginLimiter,
+  [
+    body('emailAddress2')
+      .isEmail()
+      .withMessage('Valid Email Address is required')
+      .normalizeEmail(),
+    body('password2').notEmpty().withMessage('Password is required'),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { emailAddress2, password2 } = req.body;
+
+    try {
+      // Check if the user exists in the database
+      let tutor = await Tutor.findOne({ emailAddress2 });
+      if (tutor) {
+        // Validate password
+        const isMatch = tutor.isPredefined
+          ? await bcrypt.compare(password2, tutor.password) // Compare raw password with hashed password for predefined users
+          : await tutor.comparePassword(password2); // Regular user password check
+        
+        if (!isMatch) {
+          return res.status(400).json({ status: 'error', data: 'Invalid email or password' });
+        }
+
+       
+
+        return res.status(200).send({ status: "success", data: "Login successful" });
+      }
+
+      // Check predefined credentials if the user is not found
+      const predefinedTutor = predefinedTutors.find((u) => u.emailAddress === emailAddress2);
+      if (!predefinedTutor || !(await bcrypt.compare(password2, predefinedTutor.passwordHash))) {
+        return res.status(400).json({ status: 'error', data: 'Invalid email or password' });
+      }
+
+      // Save predefined tutor to the database
+      const newTutor = new Tutor({
+        username: predefinedTutor.username,
+        emailAddress: predefinedTutor.emailAddress,
+        password: predefinedTutor.passwordHash, // Already hashed
+        phone: predefinedTutor.phone,
+        profilePhoto: predefinedTutor.profilePhoto,
+        isVerified: true, // Predefined tutors are verified by default
+        isPredefined: true, // Mark as predefined
+      });
+
+      await newTutor.save();
+
+      return res.status(200).json({ status: 'success', data: 'Predefined tutor login successful and saved to database' });
+    } catch (error) {
+      console.error('Error during tutor login:', error);
+      return res.status(500).json({ status: 'error', data: 'Server error' });
+    }
+  }
+);
 
 
-  module.exports = router;
+
+
+
+
+module.exports = router;

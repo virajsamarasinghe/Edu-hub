@@ -6,12 +6,16 @@ import { Svg, Line } from 'react-native-svg';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import CalendarStrip from 'react-native-calendar-strip'; // Import CalendarStrip
 
+
+
+
 export default function Home() {
     const [selectedBox, setSelectedBox] = useState(2); // Default selected box is Box 2
 
     const handleBoxPress = (boxNumber: number) => {
         setSelectedBox(boxNumber); // Update selected box
     };
+
 
     return (
         <LinearGradient
