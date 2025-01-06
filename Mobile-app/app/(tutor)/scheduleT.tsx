@@ -115,7 +115,11 @@ export default function Home() {
             highlightDateNameStyle={{ color: '#fff' }}
             highlightDateNumberStyle={{ color: '#fff' }}
             onDateSelected={(date) => {
-                const selectedDate = date.toDate();
+
+                
+
+                const selectedDate = date.toDate(); // Convert Moment to Date
+
                 setSelectedDate(selectedDate);
                 // Reset category when date is selected
                 setSelectedCategory('');

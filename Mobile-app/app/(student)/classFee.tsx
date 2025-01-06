@@ -65,7 +65,7 @@ export default function Home() {
             let anyPaid = false;
     
             for (const item of data) {
-                const response = await axios.get('http://192.168.8.135:5001/status', {
+                const response = await axios.get('http://192.168.8.142:5001/status', {
                     params: {
                         studentID: studentId,
                         year: currentYear,
@@ -134,7 +134,7 @@ export default function Home() {
         const amount = paymentAmounts[value || ''] || 0;
     
         try {
-            const response = await axios.post('http://192.168.8.135:5001/create-payment-intent', {
+            const response = await axios.post('http://192.168.8.142:5001/create-payment-intent', {
                 amount,
             });
     
@@ -151,7 +151,7 @@ export default function Home() {
                 const studentId = await AsyncStorage.getItem('userId');
                 if (!studentId) return;
     
-                const updateResponse = await axios.post('http://192.168.8.135:5001/make', {
+                const updateResponse = await axios.post('http://192.168.8.142:5001/make', {
                     studentID: studentId,
                     year: currentYear,
                     month: currentMonth,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: wp('15%'),
         //paddingBottom: 40,
-        width: '100%',
+        width: '95%',
         height: hp('66%'),	
         backgroundColor: '#fff',
         borderWidth: 1,
