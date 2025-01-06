@@ -62,17 +62,17 @@ export default function Home() {
         fetchPhoneFromDatabase();
       }, []);
       const handleQuizPress = () => {
-        //router.push('/quizT'); // Navigate to the /attendance route
+        router.push('/quizT'); // Navigate to the /attendance route
       };
       
       const handleResourcesPress = () => {
-        //router.push('/progressT'); // Navigate to the /progress route
+        router.push('/resourcesT'); // Navigate to the /progress route
       };
       const handleContactPress = () => {
         //router.push('/contactT'); // Navigate to the /progress route
       };
       const handleAdvicesPress = () => {
-        //router.push('/advicesT'); // Navigate to the /progress route
+        router.push('/chatT'); // Navigate to the /progress route
       };
       const handleAttendancePress = () => {
         //router.push('/attendanceT'); // Navigate to the /attendance route
