@@ -570,6 +570,8 @@ const styles = StyleSheet.create({
         width: hp('7%'),
         height: hp('7%'),
         borderRadius: 13,
+        zIndex:10,
+        top: hp('0.5%')
          // Adjust this value to position the image correctly
     },
     hellovirajText:{
@@ -602,13 +604,13 @@ const styles = StyleSheet.create({
     },
  
   editPhotoButton: {
-      top: hp('-1%'),
-      bottom:hp('5%'),
+      top: hp('1%'),
+      bottom:hp('0%'),
       position: 'absolute',
      
-      right: hp('2%'),
+      right: hp('1%'),
       backgroundColor: '#949494',
-      padding: hp('0.5%'),
+      padding: hp('2%'),
       borderRadius: 10,
       elevation: 3,
       shadowColor: '#000',

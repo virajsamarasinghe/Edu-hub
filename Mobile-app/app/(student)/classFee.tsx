@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     box2: {
         position: 'absolute',
         width: hp('41%'),
-        height: hp('35%'),
+        height: hp('42%'),
         backgroundColor: '#ffffff',
         top: hp('15%'),
         justifyContent: 'center',
