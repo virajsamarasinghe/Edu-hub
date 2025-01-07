@@ -13,7 +13,7 @@ const TutorsAdvices = () => {
     // Fetch messages when the component mounts
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://192.168.8.135:5001/api/chat/${conversationId}`);
+        const response = await axios.get(`http://169.254.14.132:5001/api/chat/${conversationId}`);
         setMessages(response.data.messages); // Assuming your backend sends messages in a 'messages' array
       } catch (error) {
         console.error('Error fetching messages:', error);
@@ -32,7 +32,7 @@ const TutorsAdvices = () => {
       };
 
       try {
-        const response = await axios.post(`http://192.168.8.135:5001/api/chat/send`, newMessage);
+        const response = await axios.post(`http://169.254.14.132:5001/api/chat/send`, newMessage);
         setMessages([...messages, response.data]); // Update the messages list with the response from the backend
         setInput('');
       } catch (error) {

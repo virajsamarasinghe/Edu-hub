@@ -17,6 +17,7 @@ app.use( require('./routes/parentRoutes'));
 app.use( require('./routes/payment'));
 app.use( require('./routes/TutorRoutes'))
 app.use( require('./routes/ScheduleRoutes'))
+app.use(require('./routes/chatRoutes'));
 // const scheduleRoutes = require('./routes/ScheduleRoutes');
 // app.use('/api', scheduleRoutes);
 

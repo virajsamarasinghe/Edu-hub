@@ -3,7 +3,7 @@ const { getMessages, sendMessage } = require('../controllers/chatController');
 
 const router = express.Router();
 
-// Route to fetch all messages for a conversation
+// Route to fetch all messages for a specific conversation
 router.get('/:conversationId', getMessages);
 
 // Route to send a new message

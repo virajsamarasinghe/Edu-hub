@@ -130,7 +130,7 @@ router.post("/register", [
   }
 });
 
-// Verify email with code or token
+//Verify email with code or token
 router.post('/verify-email', async (req, res) => {
   const { code, token } = req.body;
 
@@ -180,39 +180,39 @@ router.post('/verify-email', async (req, res) => {
   }
 });
 
-router.post('/verify-email', async (req, res) => {
-  const { token } = req.body;
+// router.post('/verify-email', async (req, res) => {
+//   const { token } = req.body;
 
-  // Check if the token is provided in the request body
-  if (!token) {
-    return res.status(400).send({ status: 'error', data: 'Token is required' });
-  }
+//   // Check if the token is provided in the request body
+//   if (!token) {
+//     return res.status(400).send({ status: 'error', data: 'Token is required' });
+//   }
 
-  try {
-    // Verify the token using the secret key
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const userId = decoded.id;
+//   try {
+//     // Verify the token using the secret key
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     const userId = decoded.id;
 
-    // Find the user in the database with the decoded userId and isVerified set to false
-    const user = await User.findOne({studentId: userId, isVerified: false });
-    if (!user) {
-      return res.status(400).send({ status: 'error', data: 'Invalid or expired token' });
-    }
+//     // Find the user in the database with the decoded userId and isVerified set to false
+//     const user = await User.findOne({studentId: userId, isVerified: false });
+//     if (!user) {
+//       return res.status(400).send({ status: 'error', data: 'Invalid or expired token' });
+//     }
 
-    // Update the user's verification status and clear the verification code and expiry
-    user.isVerified = true;
-    user.verificationCode = undefined;
-    user.verificationCodeExpiry = undefined;
-    await user.save();
+//     // Update the user's verification status and clear the verification code and expiry
+//     user.isVerified = true;
+//     user.verificationCode = undefined;
+//     user.verificationCodeExpiry = undefined;
+//     await user.save();
 
-    // Send a success response
-    res.status(200).send({ status: 'success', data: 'Email verified successfully.' });
-  } catch (error) {
-    // Log the error and send an error response if token verification fails
-    console.error('Error during token verification:', error);
-    res.status(400).send({ status: 'error', data: 'Invalid token' });
-  }
-});
+//     // Send a success response
+//     res.status(200).send({ status: 'success', data: 'Email verified successfully.' });
+//   } catch (error) {
+//     // Log the error and send an error response if token verification fails
+//     console.error('Error during token verification:', error);
+//     res.status(400).send({ status: 'error', data: 'Invalid token' });
+//   }
+// });
 
   
 

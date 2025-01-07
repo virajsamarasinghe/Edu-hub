@@ -1,175 +1,215 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Keyboard, Platform, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
+import ChatDetails from './chatDetails';
 import axios from 'axios';
 
-const TutorsAdvices = () => {
-  const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([]);
-  const [input, setInput] = useState('');
-  const conversationId = '12345'; // Replace with the actual conversation ID
+const ChatApp = () => {
+  const [currentChatId, setCurrentChatId] = useState<string | null>(null);
+  interface Message {
+    text: string;
+    sender: string;
+    conversationId: string;
+  }
 
+  const [messages, setMessages] = useState<Message[]>([]);
+  interface Chat {
+    id: string;
+    name: string;
+    category: string;
+    unread: number;
+    profileImage: string;
+    date: string;
+    message: string;
+  }
+
+  const [chats, setChats] = useState<Chat[]>([]);
+  const [search, setSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+
+  // Fetch all chats from the backend
   useEffect(() => {
-    // Fetch messages when the component mounts
-    const fetchMessages = async () => {
+    const fetchChats = async () => {
       try {
-        const response = await axios.get(`http://192.168.8.135:5001/api/chat/${conversationId}`);
-        setMessages(response.data.messages); // Assuming your backend sends messages in a 'messages' array
+        const response = await axios.get('http://192.168.8.153:5001/api/chats'); // Update the endpoint if needed
+        setChats(response.data);
       } catch (error) {
-        console.error('Error fetching messages:', error);
+        console.error('Error fetching chats:', error);
       }
     };
 
-    fetchMessages();
+    fetchChats();
   }, []);
 
-  const sendMessage = async () => {
-    if (input.trim()) {
-      const newMessage = {
-        text: input,
-        sender: 'user',
-        conversationId,
-      };
-
-      try {
-        const response = await axios.post(`http://192.168.8.135:5001/api/chat/send`, newMessage);
-        setMessages([...messages, response.data]); // Update the messages list with the response from the backend
-        setInput('');
-      } catch (error) {
-        console.error('Error sending message:', error);
-      }
+  // Fetch messages for a specific chat
+  const fetchMessages = async (chatId: string) => {
+    try {
+      const response = await axios.get(`http://192.168.8.153:5001/api/chat/${chatId}`);
+      setMessages(response.data.messages);
+      setCurrentChatId(chatId);
+    } catch (error) {
+      console.error('Error fetching messages:', error);
     }
   };
 
-  const renderItem = ({ item }: { item: { id: string; text: string; sender: string } }) => (
-    <View style={[styles.messageContainer, item.sender === 'user' ? styles.userMessage : styles.tutorMessage]}>
-      <Text style={styles.messageText}>{item.text}</Text>
-    </View>
+  // Filter chats based on search and selected category
+  const filteredChats = chats.filter((chat) => {
+    const matchesCategory = selectedCategory === 'All' || chat.category === selectedCategory;
+    const matchesSearch = search === '' || chat.name.toLowerCase().includes(search.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  // Count unread chats for the given category
+  const unreadChatsCount = (category: string) => {
+    if (category === 'All') {
+      return chats.filter((chat) => chat.unread > 0).length;
+    }
+    return chats.filter((chat: any) => chat.unread > 0 && chat.category === category).length;
+  };
+
+  // Render a single chat item
+  const renderChat = ({ item }: { item: any }) => (
+    <TouchableOpacity
+      style={styles.chatContainer}
+      onPress={() => fetchMessages(item.id)}
+    >
+      <View style={styles.chatContent}>
+        <View style={styles.profileImageContainer}>
+          <Image source={{ uri: item.profileImage }} style={styles.profileImage} />
+          {item.unread > 0 && (
+            <View style={styles.unreadBadgeProfile}>
+              <Text style={styles.unreadText}>{item.unread}</Text>
+            </View>
+          )}
+          <View style={styles.iconOverlay}>
+            {item.category === 'Student' ? (
+              <Ionicons name="school-outline" size={16} color="#fff" />
+            ) : (
+              <Ionicons name="people-outline" size={16} color="#fff" />
+            )}
+          </View>
+        </View>
+
+        <View style={styles.chatDetails}>
+          <View style={styles.chatHeader}>
+            <Text style={styles.chatName}>{item.name}</Text>
+            <Text style={styles.chatDate}>{new Date(item.date).toLocaleString()}</Text>
+          </View>
+          <Text style={styles.chatMessage}>{item.message}</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
   );
 
+  // Render the chat details screen if a chat is selected
+  if (currentChatId) {
+    return (
+      <ChatDetails
+        messages={messages}
+        onSend={async (text: string) => {
+          const newMessage = { text, sender: 'tutor', conversationId: currentChatId };
+          try {
+            const response = await axios.post(`http://localhost:5001/api/chat/send`, newMessage);
+            setMessages((prev) => [...prev, response.data]);
+          } catch (error) {
+            console.error('Error sending message:', error);
+          }
+        }}
+        onBack={() => setCurrentChatId(null)}
+      />
+    );
+  }
+
+  // Main chat list UI
   return (
-    <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
-    >
-      <LinearGradient
-        colors={['#8C78F0', '#D1C4F7']}
-        locations={[0, 1]}
-        style={styles.gradientBackground}
-      >
+    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container}>
+      <LinearGradient colors={['#8C78F0', '#D1C4F7']} style={styles.gradientBackground}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>Chat</Text>
-          <TouchableOpacity style={styles.icon}>
-            <Ionicons name="notifications-outline" size={24} color="#ffffff" />
+          <Text style={styles.headerTitle}>Chats</Text>
+        </View>
+
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search by name or student number"
+            placeholderTextColor="#ccc"
+            value={search}
+            onChangeText={setSearch}
+          />
+          <TouchableOpacity>
+            <Ionicons name="search-outline" size={24} color="#fff" />
           </TouchableOpacity>
         </View>
 
-        <FlatList
-          data={messages}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.chatContainer}
-        />
+        <View style={styles.categoryFilter}>
+          {['Student', 'Parent', 'All'].map((category) => (
+            <TouchableOpacity
+              key={category}
+              style={[
+                styles.filterButton,
+                selectedCategory === category && styles.activeFilterButton,
+              ]}
+              onPress={() => setSelectedCategory(category)}
+            >
+              <Text
+                style={[
+                  styles.filterText,
+                  selectedCategory === category && styles.activeFilterText,
+                ]}
+              >
+                {category} ({unreadChatsCount(category)})
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
 
-        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-          <View style={styles.inputContainer}>
-            <TouchableOpacity style={styles.cameraButton}>
-              <Ionicons name="camera-outline" size={24} color="#ffffff" />
-            </TouchableOpacity>
-            <TextInput
-              style={styles.input}
-              placeholder="Type your message..."
-              placeholderTextColor="#888"
-              value={input}
-              onChangeText={setInput}
-            />
-            <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
-              <Ionicons name="send" size={20} color="#ffffff" />
-            </TouchableOpacity>
-          </View>
-        </TouchableWithoutFeedback>
+        <FlatList
+          data={filteredChats}
+          renderItem={renderChat}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.chatsList}
+        />
       </LinearGradient>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  gradientBackground: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 50,
-    paddingBottom: 10,
-  },
-  headerText: {
-    color: '#ffffff',
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  icon: {
-    padding: 5,
-  },
-  chatContainer: {
-    flexGrow: 1,
-    paddingHorizontal: 15,
-    paddingBottom: 10,
-  },
-  messageContainer: {
-    maxWidth: '75%',
-    padding: 10,
-    borderRadius: 15,
-    marginVertical: 5,
-  },
-  userMessage: {
-    backgroundColor: '#8C78F0',
-    alignSelf: 'flex-end',
-  },
-  tutorMessage: {
-    backgroundColor: '#ffffff',
-    alignSelf: 'flex-start',
-    borderColor: '#8C78F0',
-    borderWidth: 1,
-  },
-  messageText: {
-    fontSize: 16,
-    color: '#000',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    backgroundColor: '#ffffff',
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-  },
-  cameraButton: {
-    padding: 10,
-    backgroundColor: '#8C78F0',
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  input: {
-    flex: 1,
-    height: 40,
-    paddingHorizontal: 10,
-    color: '#000',
-    backgroundColor: '#f2f2f2',
-    borderRadius: 20,
-  },
-  sendButton: {
-    padding: 10,
-    backgroundColor: '#8C78F0',
-    borderRadius: 20,
-    marginLeft: 10,
-  },
+  container: { flex: 1 },
+  gradientBackground: { flex: 1, paddingHorizontal: 16 },
+  header: { flexDirection: 'row', alignItems: 'center', marginTop: 40, marginBottom: 10 },
+  headerTitle: { color: '#fff', fontSize: 20, fontWeight: 'bold', marginLeft: 16 },
+  searchContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 25, paddingHorizontal: 16 },
+  searchInput: { flex: 1, fontSize: 16, height: 40, marginRight: 10 },
+  categoryFilter: { flexDirection: 'row', justifyContent: 'space-between', marginVertical: 10 },
+  filterButton: { flex: 1, alignItems: 'center', padding: 10, marginHorizontal: 5, borderRadius: 20, backgroundColor: '#fff' },
+  activeFilterButton: { backgroundColor: '#8C78F0' },
+  filterText: { fontSize: 14, color: '#555' },
+  activeFilterText: { color: '#fff', fontWeight: 'bold' },
+  chatContainer: { flexDirection: 'row', padding: 12, backgroundColor: '#fff', borderRadius: 8, marginBottom: 10, alignItems: 'center', position: 'relative' },
+  chatContent: { flexDirection: 'row', alignItems: 'center', flex: 1 },
+  profileImageContainer: { position: 'relative' },
+  profileImage: { width: 50, height: 50, borderRadius: 25 },
+  iconOverlay: { position: 'absolute', bottom: 0, right: 0, backgroundColor: '#8C78F0', borderRadius: 10, width: 20, height: 20, justifyContent: 'center', alignItems: 'center' },
+  unreadBadgeProfile: { position: 'absolute', top: -5, right: -5, backgroundColor: '#FF4500', borderRadius: 12, paddingHorizontal: 6, paddingVertical: 2 },
+  unreadText: { color: '#fff', fontSize: 12, fontWeight: 'bold' },
+  chatDetails: { flex: 1, marginLeft: 12 },
+  chatHeader: { flexDirection: 'row', justifyContent: 'space-between' },
+  chatName: { fontSize: 16, fontWeight: 'bold' },
+  chatDate: { fontSize: 12, color: '#aaa' },
+  chatMessage: { fontSize: 14, color: '#555' },
+  chatsList: { paddingBottom: 20 },
 });
 
-export default TutorsAdvices;
+export default ChatApp;

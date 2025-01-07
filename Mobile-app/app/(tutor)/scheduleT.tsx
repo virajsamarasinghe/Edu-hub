@@ -85,7 +85,7 @@ export default function Home() {
 
     const fetchSchedules = async () => {
         try {
-            const response = await axios.get('http://192.168.8.142:5001/schedules');
+            const response = await axios.get('http://169.254.14.132:5001/schedules');
             if (response.status === 200) {
                 setSchedules(response.data);
                 setSelectedCategory('Upcoming'); // Ensure Upcoming is selected by default
@@ -278,7 +278,7 @@ export default function Home() {
         };
     
         try {
-            const response = await axios.post('http://192.168.8.142:5001/schedule', scheduleData);
+            const response = await axios.post('http://169.254.14.132/schedule', scheduleData);
             if (response.status === 201) {
                 alert('Schedule added successfully!');
                 setTitle('');
@@ -297,7 +297,7 @@ export default function Home() {
 
     const deleteSchedule = async (id: string) => {
         try {
-            const response = await axios.delete(`http://192.168.8.142:5001/schedule/${id}`);
+            const response = await axios.delete(`http://169.254.14.132:5001/schedule/${id}`);
             if (response.status === 200) {
                 // Remove the deleted schedule from state
                 setSchedules((prevSchedules) =>

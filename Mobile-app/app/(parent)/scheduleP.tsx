@@ -85,7 +85,7 @@ export default function Home() {
 
     const fetchSchedules = async () => {
         try {
-            const response = await axios.get('http://172.20.10.2:5001/schedules');
+            const response = await axios.get('http://169.254.14.132:5001/schedules');
             if (response.status === 200) {
                 setSchedules(response.data);
                 setSelectedCategory('Upcoming'); // Ensure Upcoming is selected by default

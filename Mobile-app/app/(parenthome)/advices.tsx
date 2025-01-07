@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, FlatList, Keyboard, Platform, KeyboardAvoidingView, TouchableWithoutFeedback } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  FlatList,
+  Keyboard,
+  Platform,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
@@ -7,14 +18,13 @@ import axios from 'axios';
 const TutorsAdvices = () => {
   const [messages, setMessages] = useState<{ id: string; text: string; sender: string }[]>([]);
   const [input, setInput] = useState('');
-  const conversationId = '12345'; // Replace with the actual conversation ID
+  const conversationId = '12345'; // Replace with actual conversation ID
 
   useEffect(() => {
-    // Fetch messages when the component mounts
     const fetchMessages = async () => {
       try {
-        const response = await axios.get(`http://172.20.10.2:5001/api/chat/${conversationId}`);
-        setMessages(response.data.messages); // Assuming your backend sends messages in a 'messages' array
+        const response = await axios.get(`http://169.254.14.132:5001/api/chat/${conversationId}`);
+        setMessages(response.data.messages || []); // Assuming backend returns messages in a `messages` array
       } catch (error) {
         console.error('Error fetching messages:', error);
       }
@@ -32,8 +42,8 @@ const TutorsAdvices = () => {
       };
 
       try {
-        const response = await axios.post(`http://192.168.8.135:5001/api/chat/send`, newMessage);
-        setMessages([...messages, response.data]); // Update the messages list with the response from the backend
+        const response = await axios.post(`http://169.254.14.132:5001/api/chat/send`, newMessage);
+        setMessages((prevMessages) => [...prevMessages, response.data]); // Append new message from backend response
         setInput('');
       } catch (error) {
         console.error('Error sending message:', error);
@@ -41,8 +51,13 @@ const TutorsAdvices = () => {
     }
   };
 
-  const renderItem = ({ item }: { item: { id: string; text: string; sender: string } }) => (
-    <View style={[styles.messageContainer, item.sender === 'user' ? styles.userMessage : styles.tutorMessage]}>
+  const renderMessage = ({ item }: { item: { id: string; text: string; sender: string } }) => (
+    <View
+      style={[
+        styles.messageContainer,
+        item.sender === 'user' ? styles.userMessage : styles.tutorMessage,
+      ]}
+    >
       <Text style={styles.messageText}>{item.text}</Text>
     </View>
   );
@@ -52,25 +67,24 @@ const TutorsAdvices = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
-      <LinearGradient
-        colors={['#8C78F0', '#D1C4F7']}
-        locations={[0, 1]}
-        style={styles.gradientBackground}
-      >
+      <LinearGradient colors={['#8C78F0', '#D1C4F7']} style={styles.gradientBackground}>
+        {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.headerText}>Chat</Text>
-          <TouchableOpacity style={styles.icon}>
+          <Text style={styles.headerTitle}>Tutor's Advice</Text>
+          <TouchableOpacity>
             <Ionicons name="notifications-outline" size={24} color="#ffffff" />
           </TouchableOpacity>
         </View>
 
+        {/* Messages */}
         <FlatList
           data={messages}
-          renderItem={renderItem}
+          renderItem={renderMessage}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.chatContainer}
         />
 
+        {/* Input Section */}
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <View style={styles.inputContainer}>
             <TouchableOpacity style={styles.cameraButton}>
@@ -108,13 +122,10 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     paddingBottom: 10,
   },
-  headerText: {
+  headerTitle: {
     color: '#ffffff',
     fontSize: 24,
     fontWeight: 'bold',
-  },
-  icon: {
-    padding: 5,
   },
   chatContainer: {
     flexGrow: 1,
