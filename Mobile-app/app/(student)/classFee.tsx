@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity,KeyboardAvoidingView,Platform, Alert, Modal, TouchableWithoutFeedback, ScrollView } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useFocusEffect, useNavigation, NavigationProp } from '@react-navigation/native';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -10,7 +10,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CardField, useStripe, StripeProvider,initPaymentSheet, presentPaymentSheet } from '@stripe/stripe-react-native';
 import LottieView from 'lottie-react-native';
-
+import { Modalize } from 'react-native-modalize';
 
 const PUBLISHABLE_KEY = 'pk_test_51PoAoaB44XaxZNEmJa6hDXjhrpMaOjwPTOyG1pikZkG7tNOX73LOoparv94l0QelNzz36xunrhh0PUkv8H5EefkU00rgq5dkaG'; // Replace with your actual publishable key
 
@@ -44,7 +44,7 @@ export default function Home() {
     const [cardComplete, setCardComplete] = useState(false);
     const { confirmPayment,initPaymentSheet, presentPaymentSheet } = useStripe();
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-
+    const modalizeRef = useRef<Modalize>(null);
     useFocusEffect(
         useCallback(() => {
             setValue(null);
@@ -120,7 +120,7 @@ export default function Home() {
             return;
         }
     
-        setShowPayment(true);
+        modalizeRef.current?.open();
     };
     
     const handlePayPress = async () => {
@@ -170,7 +170,7 @@ export default function Home() {
             console.error('Payment error:', error);
             Alert.alert('Payment failed. Please try again.');
         }
-        setShowPayment(false);
+        modalizeRef.current?.close();
     };
     
     
@@ -247,59 +247,56 @@ export default function Home() {
 
 
                 {/* Payment Modal */}
-<Modal
- visible={showPayment}
- transparent
- animationType="slide"
- onRequestClose={() => setShowPayment(false)}
->
+                <Modalize
+          ref={modalizeRef}
+          modalHeight={hp('50%')} // Adjust height as needed
+          handleStyle={{ backgroundColor: '#ccc' }}
+          modalStyle={styles.modalContainer}
+        >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined} // Adjust for iOS
+        style={{ flex: 1 }} // Take full height inside modal
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+          <TouchableWithoutFeedback>
+            <View style={styles.modalContent}>
+              <Text style={styles.headerText}>Enter Payment Details</Text>
 
-<TouchableWithoutFeedback onPress={() => setShowPayment(false)}>
-  
-    <View style={styles.modalContainer}>
-   
-    <TouchableWithoutFeedback>
-  
-        <View style={styles.modalContent}>
-         <Text style={styles.headerText}>Enter Payment Details</Text>
-         
-                <LottieView 
-                    style={styles.lottieAnimation} 
-                    source={require('../../assets/animation/7.json')} 
-                    autoPlay 
-                    loop 
-                />
-            <Text  style={styles.label}>Amount</Text>
-            <Text style={styles.amountText}>
-              LKR {paymentAmounts[value || ''] / 100}
-            </Text>
-            
-            <CardField
+              <LottieView
+                style={styles.lottieAnimation}
+                source={require('../../assets/animation/7.json')}
+                autoPlay
+                loop
+              />
+              
+              <Text style={styles.label}>Amount</Text>
+              <Text style={styles.amountText}>
+                LKR {paymentAmounts[value || ''] / 100}
+              </Text>
+
+              <CardField
                 postalCodeEnabled={true}
-                
                 cardStyle={{
-                    backgroundColor: '#FFFFFF',
-                    fontSize: 16,
-                    borderWidth: 1,
-                    borderColor: '#cccccc',
-                    borderRadius: 5,
-                    textColor: '#000000',
+                  backgroundColor: '#FFFFFF',
+                  fontSize: 16,
+                  borderWidth: 1,
+                  borderColor: '#cccccc',
+                  borderRadius: 5,
+                  textColor: '#000000',
                 }}
                 style={styles.cardFieldContainer}
                 onCardChange={(details) => setCardComplete(details.complete)}
-            />
-            <TouchableOpacity style={styles.button} onPress={handlePayPress}>
+              />
+
+              <TouchableOpacity style={styles.button} onPress={handlePayPress}>
                 <Text style={styles.buttonText}>Proceed</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
             </View>
-          
-            </TouchableWithoutFeedback>
-            
-            </View>
-            
-            </TouchableWithoutFeedback>
-           
-            </Modal>
+          </TouchableWithoutFeedback>
+        </ScrollView>
+      </KeyboardAvoidingView>
+   
+</Modalize>
             </LinearGradient>
         </StripeProvider>
     );
@@ -350,27 +347,28 @@ const styles = StyleSheet.create({
       },
     box1: {
         position: 'absolute',
-        width: hp('42%'),
-        height: hp('26%'),
+        width: hp('43.8%'),
+        height: hp('75%'),
         backgroundColor: '#ffffff',
-        top: hp('2%'),
-        justifyContent: 'center',
+        top: hp('-12%'),
+        //justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.5,
         shadowRadius: 3.84,
         elevation: 5,
         borderRadius: wp('8%'),
-        borderColor: '#8C78F0',
-        borderWidth: 1,
+        // borderColor: '#8C78F0',
+        // borderWidth: 1,
         padding: wp('5%'),
+        
     },
     box2: {
         position: 'absolute',
-        width: hp('42%'),
+        width: hp('41%'),
         height: hp('35%'),
         backgroundColor: '#ffffff',
-        top: hp('30%'),
+        top: hp('15%'),
         justifyContent: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
@@ -378,9 +376,10 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         borderRadius: wp('8%'),
-        borderColor: '#8C78F0',
-        borderWidth: 1,
+        // borderColor: '#8C78F0',
+        // borderWidth: 1,
         padding: wp('5%'),
+        
     },
     textpay: {
         color: '#ffffff',
@@ -490,23 +489,16 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     modalContainer: {
-        flex: 1,
-       
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: '#ffff',
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
     },
     modalContent: {
-        width: '100%',
-        height: '80%',
-        marginTop:  hp('55%'),
-        backgroundColor: '#fff',
-        borderRadius: wp('8%'),
-        padding: 20,
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.5,
-        shadowRadius: 3.84,
-        elevation: 5,
         
     },
     headerText: {

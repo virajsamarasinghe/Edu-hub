@@ -606,10 +606,10 @@ const styles = StyleSheet.create({
       bottom:hp('5%'),
       position: 'absolute',
      
-      right: hp('-1%'),
+      right: hp('2%'),
       backgroundColor: '#949494',
       padding: hp('0.5%'),
-      borderRadius: 20,
+      borderRadius: 10,
       elevation: 3,
       shadowColor: '#000',
       shadowOffset: { width: 0, height: 2 },
