@@ -85,7 +85,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.135:5001/login', {
+      const response = await axios.post('http://172.20.10.3:5001/login', {
         studentId,
         password
       });
@@ -95,7 +95,7 @@ const Login = () => {
       //const studId = response.data.studentId;
       await AsyncStorage.setItem('userId', studentId);
 
-      const userDataResponse = await axios.get('http://192.168.8.135:5001/get-user-data', {
+      const userDataResponse = await axios.get('http://172.20.10.3:5001/get-user-data', {
         params: { studentId }
       });
 
@@ -136,7 +136,7 @@ const Login = () => {
 
     try {
       setLoading(true);
-      const response = await axios.post('http://192.168.8.135:5001/loginP', {
+      const response = await axios.post('http://172.20.10.3:5001/loginP', {
         emailAddress,
         password1
       });
@@ -145,7 +145,7 @@ const Login = () => {
 
       await AsyncStorage.setItem('userP',emailAddress);
 
-      const userDataResponseP = await axios.get('http://192.168.8.135:5001/get-user-dataP', {
+      const userDataResponseP = await axios.get('http://172.20.10.3:5001/get-user-dataP', {
         params: { emailAddress}
       });
 
@@ -179,7 +179,7 @@ const handleLoginT = async () => {
     setLoading(true);
 
     // Make the API request
-    const response = await axios.post('http://192.168.8.142:5001/loginT', {
+    const response = await axios.post('http://172.20.10.3:5001/loginT', {
        emailAddress2, // Trim whitespace for better validation
        password2,
     });
